@@ -20,7 +20,9 @@ jobs:
         with:
           node-version: 21
           registry-url: https://npm.pkg.github.com/
-      - run: npm i -g pnpm
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8.14.0
       - run: pnpm i
       - run: pnpm build
       - run: cd packages/react && npm publish --no-git-checks
