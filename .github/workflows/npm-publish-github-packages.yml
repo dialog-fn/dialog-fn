@@ -25,6 +25,6 @@ jobs:
           version: 8.14.0
       - run: pnpm i
       - run: pnpm build
-      - run: cd packages/react && npm publish --no-git-checks
+      - run: cd packages/react && pnpm publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
