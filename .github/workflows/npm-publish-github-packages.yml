@@ -35,7 +35,6 @@ jobs:
       - run: pnpm i
       - run: pnpm build
       - run: cd packages/react
-      - run: @charneykaye:registry=https://npm.pkg.github.com
       - run: |
           echo "//npm.pkg.github.com/:_authToken=\${NODE_AUTH_TOKEN}" > .npmrc
           echo "@njacob1001:registry=https://npm.pkg.github.com" >> .npmrc
