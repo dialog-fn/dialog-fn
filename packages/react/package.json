@@ -5,6 +5,7 @@
   "type": "module",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
+  "repository": "https://github.com/njacob1001/dialog-fn",
   "author": {
     "name": "Jacob Gonzalez",
     "email": "hello@jacobgonzalez.dev"
