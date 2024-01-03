@@ -7,7 +7,7 @@
   "types": "dist/main.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/njacob1001/dialog-fn.git"
+    "url": "git+https://github.com/dialog-fn/dialog-fn"
   },
   "author": {
     "name": "Jacob Gonzalez",
