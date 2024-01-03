@@ -1,0 +1,23 @@
+{
+  "name": "@dialog-fn/core",
+  "version": "1.0.0",
+  "private": false,
+  "description": "Dialog Flow Functions",
+  "main": "src/main.js",
+  "module": "src/main.js",
+  "files": [
+    "src",
+    "types"
+  ],
+  "typings": "types/main.d.ts",
+  "keywords": [
+    "dialog",
+    "flow",
+    "functions"
+  ],
+  "author": "Jacob Gonzalez",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --declaration --allowJs --emitDeclarationOnly --outDir types"
+  }
+}
