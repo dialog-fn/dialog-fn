@@ -44,6 +44,6 @@
     "vite-plugin-dts": "^3.7.0"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "@njacob1001:registry": "https://npm.pkg.github.com"
   }
 }
