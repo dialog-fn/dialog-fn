@@ -35,4 +35,4 @@ jobs:
       - run: pnpm build
       - run: cd packages/react && pnpm publish --no-git-checks
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.AUTH_TOKEN}}
