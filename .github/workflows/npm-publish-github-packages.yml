@@ -9,18 +9,7 @@ on:
     types: [created]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      # - run: npm ci
-      # - run: npm test
-
   publish-gpr:
-    needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -31,6 +20,8 @@ jobs:
         with:
           node-version: 18
           registry-url: https://npm.pkg.github.com/
+          node-version-file: '.nvmrc'
+          cache: 'npm'
       - run: npm i -g pnpm
       - run: pnpm i
       - run: pnpm build
