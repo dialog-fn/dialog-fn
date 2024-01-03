@@ -34,6 +34,13 @@ jobs:
       - run: npm i -g pnpm
       - run: pnpm i
       - run: pnpm build
-      - run: cd packages/react && npm publish --no-git-checks
+      - run: cd packages/react
+      - run: @charneykaye:registry=https://npm.pkg.github.com
+      - run: |
+          echo "//npm.pkg.github.com/:_authToken=\${NODE_AUTH_TOKEN}" > .npmrc
+          echo "@njacob1001:registry=https://npm.pkg.github.com" >> .npmrc
+          echo "always-auth=true" >> .npmrc
+          cat .npmrc
+      - run: npm publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
