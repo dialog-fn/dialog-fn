@@ -31,6 +31,7 @@ jobs:
           node-version: 16
           registry-url: https://npm.pkg.github.com/
       - run: npm i -g pnpm
+      - run: pnpm i
       - run: pnpm build
       - run: npm publish
         env:
