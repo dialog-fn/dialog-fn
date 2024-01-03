@@ -5,7 +5,10 @@
   "type": "module",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
-  "repository": "https://github.com/njacob1001/dialog-fn",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/njacob1001/dialog-fn.git"
+  }
   "author": {
     "name": "Jacob Gonzalez",
     "email": "hello@jacobgonzalez.dev"
@@ -45,6 +48,6 @@
     "vite-plugin-dts": "^3.7.0"
   },
   "publishConfig": {
-    "@njacob1001:registry": "https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com"
   }
 }
