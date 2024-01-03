@@ -15,21 +15,15 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
+          version: 21
           registry-url: https://npm.pkg.github.com/
-          node-version-file: '.nvmrc'
-          cache: 'npm'
       - run: npm i -g pnpm
       - run: pnpm i
       - run: pnpm build
       - run: cd packages/react
-      - run: |
-          echo "//npm.pkg.github.com/:_authToken=\${NODE_AUTH_TOKEN}" > .npmrc
-          echo "@njacob1001:registry=https://npm.pkg.github.com" >> .npmrc
-          echo "always-auth=true" >> .npmrc
-          cat .npmrc
       - run: npm publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
