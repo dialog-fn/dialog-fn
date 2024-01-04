@@ -4,6 +4,7 @@
   "type": "module",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
+  "homepage": "https://github.com/dialog-fn/dialog-fn?tab=readme-ov-file#dialog-fn",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dialog-fn/dialog-fn"

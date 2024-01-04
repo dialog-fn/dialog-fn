@@ -1,7 +1,11 @@
 {
   "name": "dialog-fn",
   "version": "1.0.0",
-  "repository": "https://github.com/njacob1001/dialog-fn",
+  "homepage": "https://github.com/dialog-fn/dialog-fn?tab=readme-ov-file#dialog-fn",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dialog-fn/dialog-fn"
+  },
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
