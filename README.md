@@ -77,10 +77,10 @@ export const MyDialog = ({ isOpen, data, onClose, onConfirm }) => {
   }
 
   return (
-    <>
+    <dialog open={isOpen}>
       <div>
         <h1>My Dialog</h1>
-        <p>Is open: {isOpen.toString()}</p>
+        <p>{data.foo}</p>
         <form>
           <input name="demo" />
           <button type="submit">Confirm</button>
@@ -88,7 +88,7 @@ export const MyDialog = ({ isOpen, data, onClose, onConfirm }) => {
         <button onClick={onClose}>Close</button>
        
       </div>
-    </>
+    </dialog>
   );
 };
 
