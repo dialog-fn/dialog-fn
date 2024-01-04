@@ -64,3 +64,33 @@ When you wrap a component using `register` HOC it will pass 4 props to control t
 - data: T
 
 make sure your component is ready to recieve and handle these props
+
+this is an example of a simpe dialog you can create
+
+```jsx
+export const MyDialog = ({ isOpen, data, onClose, onConfirm }) => {
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    const data = new FormData(event.target);
+    const response = Object.fromEntries(data.entries());
+    onConfirm(response)
+  }
+
+  return (
+    <>
+      <div>
+        <h1>My Dialog</h1>
+        <p>Is open: {isOpen.toString()}</p>
+        <form>
+          <input name="demo" />
+          <button type="submit">Confirm</button>
+        </form>
+        <button onClick={onClose}>Close</button>
+       
+      </div>
+    </>
+  );
+};
+
+```
+
