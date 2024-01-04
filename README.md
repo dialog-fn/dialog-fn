@@ -28,7 +28,7 @@ npm i @dialog-fn/react
 
 ```jsx
 import MyDialog from './my-dialog'
-+ import { createDialog } from '@dialog-fn/react'
+import { createDialog } from '@dialog-fn/react'
 
 const { register, useDialog } = createDialog();
 const Dialog = register(MyDialog);
@@ -51,3 +51,14 @@ export const Page = () => {
   )
 }
 ```
+
+# register HOC
+
+When you wrap a component using `register` HOC it will pass 4 props to control the dialog:
+
+- isOpen: boolean
+- onClose: () => void
+- onConfirm: (data: T) => void
+- data: T
+
+make sure your component is ready to recieve and handle these props
