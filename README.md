@@ -22,9 +22,13 @@ npm i @dialog-fn/react
 
 ## Example (react)
 
+
+> [!TIP]
+> Once you have wrapped your dialog with register function, you are able to place the Dialog component anywhere, thanks to dependency free implementation of this library
+
 ```jsx
-import MyComponent from './my-component'
-import { createDialog } from '@dialog-fn/react'
+import MyDialog from './my-dialog'
++ import { createDialog } from '@dialog-fn/react'
 
 const { register, useDialog } = createDialog();
 const Dialog = register(MyDialog);
