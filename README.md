@@ -60,7 +60,7 @@ When you wrap a component using `register` HOC it will pass 4 props to control t
 
 - isOpen: boolean
 - onClose: () => void
-- onConfirm: (data: T) => void
+- onConfirm: (response: T) => void
 - data: T
 
 make sure your component is ready to recieve and handle these props
