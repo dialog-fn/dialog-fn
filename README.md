@@ -37,7 +37,9 @@ export const Page = () => {
   const showDialog = useDialog()
 
   const handleClik = async () => {
-    const response = await showDialog()
+    // you can pass any data to your dialog component
+    const data = {foo:'bar'}
+    const response = await showDialog(data)
     console.log(response)
   }
 
