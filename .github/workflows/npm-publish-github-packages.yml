@@ -28,3 +28,22 @@ jobs:
       - run: cd packages/react && npm publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  publish-npm:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 21
+          registry-url: https://registry.npmjs.org/
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8.14.0
+      - run: pnpm i
+      - run: pnpm build
+      - run: cd packages/react && npm publish --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
