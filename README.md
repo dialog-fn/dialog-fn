@@ -11,6 +11,16 @@ This is a very lightweight implementation, provider free, compatible with any ki
 
 Improve development experience using dialogs as promise function, this library transform your Dialog component and expose a handler to control the visibility and the confirm/cancel actions, using only a single promise.
 
+# Supported
+
+| Framework  | yes/no |
+| ------------- | ------------- |
+| react  | ✅ |
+| react native | ✅  |
+| svelte | ⏳ |
+| solid | ⏳ | 
+| qwik | ⏳ | 
+
 ## Get started
 
 React:
