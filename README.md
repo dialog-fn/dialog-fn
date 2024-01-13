@@ -65,7 +65,7 @@ export const Page = () => {
 }
 ```
 
-# register HOC
+### register HOC
 
 When you wrap a component using `register` HOC it will pass 4 props to control the dialog:
 
