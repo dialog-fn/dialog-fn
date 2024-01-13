@@ -1,4 +1,11 @@
+
+/**
+ * 
+ * @param {any} createState 
+ * @returns void
+ */
 export const createStore = (createState) => {
+  /** @type {any} */
   let state;
 
   const listeners = new Set();
