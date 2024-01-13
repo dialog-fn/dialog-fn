@@ -27,6 +27,7 @@ React:
 
 ```
 npm i @dialog-fn/react
+npm i @dialog-fn/svelte
 ```
 
 
