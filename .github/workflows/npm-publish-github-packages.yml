@@ -9,6 +9,18 @@ on:
     types: [created]
 
 jobs:
+  publish:
+    name: ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Publish @dialo-fn/react
+            package: packages/react
+          - name: Publish @dialo-fn/svelte
+            package: packages/svelte
+    runs-on: ubuntu-latest
+
   publish-gpr:
     runs-on: ubuntu-latest
     permissions:
@@ -25,7 +37,7 @@ jobs:
           version: 8.14.0
       - run: pnpm i
       - run: pnpm build
-      - run: cd packages/react && npm publish --access=public
+      - run: cd ${{ matrix.package }} && npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
   publish-npm:
@@ -44,6 +56,6 @@ jobs:
           version: 8.14.0
       - run: pnpm i
       - run: pnpm build
-      - run: cd packages/react && npm publish --access=public
+      - run: cd ${{ matrix.package }} && npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

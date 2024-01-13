@@ -10,7 +10,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "$_ run --stream --parallel build",
-    "react": "$_ run --filter react dev"
+    "react": "$_ run --filter react dev",
+    "svelte": "$_ run --filter svelte dev"
   },
   "keywords": [],
   "author": "",
