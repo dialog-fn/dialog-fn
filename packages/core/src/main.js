@@ -1,15 +1,6 @@
-const createStoreImpl = (createState) => {
-  /**
-   * @typedef {object} State
-   * @property {string} id - an ID.
-   * @property {string} name - your name.
-   * @property {number} age - your age.
-   */
-
-  /** @type {State} */
+export const createStore = (createState) => {
   let state;
 
-  /** @type {Set<(state: any, prevState: any) => void>} */
   const listeners = new Set();
 
   const setState = (partial, replace) => {
@@ -38,5 +29,4 @@ const createStoreImpl = (createState) => {
   return api;
 };
 
-export const createStore = (createState) =>
-  createState ? createStoreImpl(createState) : createStoreImpl;
+
