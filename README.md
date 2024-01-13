@@ -104,3 +104,25 @@ export const MyDialog = ({ isOpen, data, onClose, onConfirm }) => {
 
 ```
 
+## Example (svelte)
+
+```
+<script>
+import MyDialog from './my-dialog.svelte'
+import { DialogRegister } from '@dialog-fn/react'
+
+let showDialog
+
+const handleDialog = async () => {
+    const response = await showDialog({foo:'bar'})
+    console.log(response)
+}
+
+  </script>
+
+<h1>Welcome!</h1>
+<p>this is a demo example</p>
+<button on:click={handleDialog} >hello</button>
+
+<DialogRegister wrappedComponent={MyDialog} bind:showDialog={showDialog} />
+```
