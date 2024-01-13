@@ -106,7 +106,7 @@ export const MyDialog = ({ isOpen, data, onClose, onConfirm }) => {
 
 ## Example (svelte)
 
-```
+```svelte
 <script>
 import MyDialog from './my-dialog.svelte'
 import { DialogRegister } from '@dialog-fn/react'
@@ -118,7 +118,7 @@ const handleDialog = async () => {
     console.log(response)
 }
 
-  </script>
+</script>
 
 <h1>Welcome!</h1>
 <p>this is a demo example</p>
