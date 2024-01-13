@@ -17,7 +17,7 @@ Improve development experience using dialogs as promise function, this library t
 | ------------- | ------------- |
 | react  | ✅ |
 | react native | ✅  |
-| svelte | ⏳ |
+| svelte | ✅ |
 | solid | ⏳ | 
 | qwik | ⏳ | 
 
