@@ -11,15 +11,13 @@ This is a very lightweight implementation, provider free, compatible with any ki
 
 Improve development experience using dialogs as promise function, this library transform your Dialog component and expose a handler to control the visibility and the confirm/cancel actions, using only a single promise.
 
-# Supported with many frameworks
+# Supported with popular frameworks
 
-| Framework  | supported |
-| ------------- | ------------- |
-| react  | ✅ |
-| react native | ✅  |
-| svelte | ✅ |
-| solid | ⏳ | 
-| qwik | ⏳ | 
+| Framework    | supported |
+| ------------ | --------- |
+| react        | ✅        |
+| react native | ✅        |
+| svelte       | ✅        |
 
 ## Get started
 
@@ -30,39 +28,37 @@ npm i @dialog-fn/react
 npm i @dialog-fn/svelte
 ```
 
-
 ## Example (react)
-
 
 > [!TIP]
 > Once you have wrapped your dialog with register function, you are able to place the Dialog component anywhere, thanks to dependency free implementation of this library
 
 ```jsx
-import MyDialog from './my-dialog'
-import { createDialog } from '@dialog-fn/react'
+import MyDialog from "./my-dialog";
+import { createDialog } from "@dialog-fn/react";
 
-const { register, useDialog } = createDialog();
-const Dialog = register(MyDialog);
+// you could also add type notation, eg: createDialog<Input, Output>(MyDialog)
+const { Dialog, useDialog } = createDialog(MyDialog);
 
 export const Page = () => {
-  const showDialog = useDialog()
+  const showDialog = useDialog();
 
   const handleClik = async () => {
     // you can pass any data to your dialog component
-    const data = {foo:'bar'}
-    const response = await showDialog(data)
-    console.log(response)
-  }
+    const data = { foo: "bar" };
+    const response = await showDialog(data);
+    console.log(response);
+  };
 
   return (
     <div>
       <button onClick={handleClik}>demo</button>
       {/** your ui code */}
-    
-      <Dialog/>
+
+      <Dialog />
     </div>
-  )
-}
+  );
+};
 ```
 
 ### register HOC
@@ -81,11 +77,11 @@ this is an example of a simpe dialog you can create
 ```jsx
 export const MyDialog = ({ isOpen, data, onClose, onConfirm }) => {
   const handleSubmit = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     const data = new FormData(event.target);
     const response = Object.fromEntries(data.entries());
-    onConfirm(response)
-  }
+    onConfirm(response);
+  };
 
   return (
     <dialog open={isOpen}>
@@ -97,12 +93,10 @@ export const MyDialog = ({ isOpen, data, onClose, onConfirm }) => {
           <button type="submit">Confirm</button>
         </form>
         <button onClick={onClose}>Close</button>
-       
       </div>
     </dialog>
   );
 };
-
 ```
 
 ## Example (svelte)
@@ -132,7 +126,7 @@ Your custom dialog component should be able to handle the injected props coming 
 
 ```svelte
 <script>
-    // these props will be provided by @dialog-fn/svelte 
+    // these props will be provided by @dialog-fn/svelte
     export let isOpen = false;
     export let data = {};
     export let onClose = () => {};

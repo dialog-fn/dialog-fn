@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useSyncExternalStore } from "use-sync-external-store";
+import { useSyncExternalStore } from "use-sync-external-store/shim";
 import { createStore } from "@dialog-fn/core";
 
 type DialogMutableState<T> = {
@@ -10,7 +10,7 @@ type DialogMutableState<T> = {
 
 type DialogHandlers<T> = {
   onClose: () => void;
-  setPromise: (r: (value: T) => void, re: (reason?: string) => void) => void;
+  setPromise: (r: (value: any) => void, re: (reason?: string) => void) => void;
   setData: (data: T) => void;
   open: () => void;
   onConfirm: () => void;
@@ -35,7 +35,7 @@ type ComponentProps<T> = {
   onConfirm: () => void;
 };
 
-export function createDialog<T>() {
+export function createDialog<T, K>(Component: FC<ComponentProps<T>>) {
   const useDialog = createUniqueStore<DialogState<T>>(
     (set, get) =>
       ({
@@ -62,27 +62,25 @@ export function createDialog<T>() {
 
           return set({ isOpen: false, data: {}, promise: {} } as any);
         },
-      } as DialogState<T>)
+      }) as DialogState<T>
   ) as () => DialogState<T>;
 
   return {
-    register: (Component: FC<ComponentProps<T>>) => {
-      return () => {
-        const { isOpen, data, onClose, onConfirm } = useDialog();
-        return (
-          <Component
-            isOpen={isOpen}
-            data={data}
-            onClose={onClose}
-            onConfirm={onConfirm}
-          />
-        );
-      };
+    Dialog: () => {
+      const { isOpen, data, onClose, onConfirm } = useDialog();
+      return (
+        <Component
+          isOpen={isOpen}
+          data={data}
+          onClose={onClose}
+          onConfirm={onConfirm}
+        />
+      );
     },
     useDialog: () => {
       const { setPromise, setData, open } = useDialog();
 
-      const showDialog = (data: T) =>
+      const showDialog = (data: T): Promise<K> =>
         new Promise((resolve, reject) => {
           setPromise(resolve, reject);
           open();

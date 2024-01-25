@@ -1,14 +1,14 @@
 {
 	"name": "@dialog-fn/svelte",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"homepage": "https://github.com/dialog-fn/dialog-fn?tab=readme-ov-file#dialog-fn",
 	"repository": {
-	  "type": "git",
-	  "url": "git+https://github.com/dialog-fn/dialog-fn"
+		"type": "git",
+		"url": "git+https://github.com/dialog-fn/dialog-fn"
 	},
 	"author": {
-	  "name": "Jacob Gonzalez",
-	  "email": "hello@jacobgonzalez.dev"
+		"name": "Jacob Gonzalez",
+		"email": "hello@jacobgonzalez.dev"
 	},
 	"license": "MIT",
 	"scripts": {
