@@ -12,6 +12,8 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v2
       - name: Bump version and push tag
@@ -26,6 +28,7 @@ jobs:
           name: Release ${{ steps.tag_version.outputs.new_tag }}
           body: ${{ steps.tag_version.outputs.changelog }}
   publish-gpr:
+    needs: release
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -54,6 +57,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
   publish-npm:
+    needs: release
     runs-on: ubuntu-latest
     permissions:
       contents: read
