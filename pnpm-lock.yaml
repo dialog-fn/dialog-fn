@@ -17,7 +17,7 @@ importers:
   packages/react:
     devDependencies:
       '@dialog-fn/core':
-        specifier: ^1.0.0
+        specifier: ^1.0.1
         version: link:../core
       '@types/node':
         specifier: ^20.10.6
@@ -71,7 +71,7 @@ importers:
   packages/svelte:
     devDependencies:
       '@dialog-fn/core':
-        specifier: ^1.0.0
+        specifier: ^1.0.1
         version: link:../core
       '@playwright/test':
         specifier: ^1.28.1

@@ -1,6 +1,6 @@
 {
   "name": "@dialog-fn/react",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
@@ -29,7 +29,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@dialog-fn/core": "^1.0.0",
+    "@dialog-fn/core": "^1.0.1",
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",

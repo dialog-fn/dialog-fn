@@ -1,6 +1,6 @@
 {
 	"name": "@dialog-fn/svelte",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"homepage": "https://github.com/dialog-fn/dialog-fn?tab=readme-ov-file#dialog-fn",
 	"repository": {
 		"type": "git",
@@ -38,7 +38,7 @@
 		"svelte": "^4.0.0"
 	},
 	"devDependencies": {
-		"@dialog-fn/core": "^1.0.0",
+		"@dialog-fn/core": "^1.0.1",
 		"@playwright/test": "^1.28.1",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/kit": "^2.0.0",

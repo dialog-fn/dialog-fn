@@ -1,77 +1,61 @@
 import { FC } from "react";
 import { useSyncExternalStore } from "use-sync-external-store/shim";
 import { createStore } from "@dialog-fn/core";
-
-type DialogMutableState<T> = {
-  isOpen: boolean;
-  data: T;
-  promise: { resolve?: (value: T) => void; reject?: (reason?: string) => void };
-};
-
-type DialogHandlers<T> = {
-  onClose: () => void;
-  setPromise: (r: (value: any) => void, re: (reason?: string) => void) => void;
-  setData: (data: T) => void;
-  open: () => void;
-  onConfirm: () => void;
-};
-
-type DialogState<T> = DialogMutableState<T> & DialogHandlers<T>;
+import type { DialogMutableState, DialogState } from "@dialog-fn/core";
 
 type Get<T> = () => T;
-type Set<T> = (value: DialogMutableState<T>) => void;
+type Set<T, K> = (value: Partial<DialogMutableState<T, K>>) => void;
 
-type StateCreator<T> = (set: Set<T>, get: Get<T>) => T;
+type StateCreator<T, K> = (set: Set<T, K>, get: Get<T>) => T;
 
-function createUniqueStore<T>(createState: StateCreator<T>) {
+function createUniqueStore<T, K>(createState: StateCreator<T, K>) {
   const api = createStore(createState) as any;
   return () => useSyncExternalStore(api.subscribe, api.getState);
 }
 
-type ComponentProps<T> = {
+export interface DialogProps<T, K> {
   isOpen: boolean;
   data: T;
   onClose: () => void;
-  onConfirm: () => void;
-};
+  onConfirm: (response: K) => void;
+}
 
-export function createDialog<T, K>(Component: FC<ComponentProps<T>>) {
-  const useDialog = createUniqueStore<DialogState<T>>(
+export function createDialog<T, K>(DialogComponent: FC<DialogProps<T, K>>) {
+  const useDialog = createUniqueStore<DialogState<T, K>, K>(
     (set, get) =>
       ({
         isOpen: false,
         data: {},
         promise: {},
-        onClose: () => {
-          const resolve = get().promise.resolve;
-          if (resolve) {
-            resolve({} as T);
-          }
-
-          return set({ isOpen: false, data: {} as any, promise: {} });
-        },
-        setPromise: (r, re) =>
-          set({ promise: { resolve: r, reject: re } } as any),
-        setData: (data: any) => set({ data } as any),
-        open: () => set({ isOpen: true } as any),
-        onConfirm: (data: any) => {
+        onConfirm: (data: K) => {
           const resolve = get().promise.resolve;
           if (resolve) {
             resolve(data);
           }
 
-          return set({ isOpen: false, data: {}, promise: {} } as any);
+          return set({ isOpen: false, data: {}, promise: {} });
         },
-      }) as DialogState<T>
-  ) as () => DialogState<T>;
+        onClose: () => {
+          const resolve = get().promise.resolve;
+          if (resolve) {
+            resolve();
+          }
+
+          return set({ isOpen: false, data: {}, promise: {} });
+        },
+        setPromise: (r, re) => set({ promise: { resolve: r, reject: re } }),
+        setData: (data) => set({ data } as any),
+        open: () => set({ isOpen: true }),
+      }) as DialogState<T, K>
+  ) as () => DialogState<T, K>;
 
   return {
     Dialog: () => {
       const { isOpen, data, onClose, onConfirm } = useDialog();
       return (
-        <Component
+        <DialogComponent
           isOpen={isOpen}
-          data={data}
+          data={data as T}
           onClose={onClose}
           onConfirm={onConfirm}
         />
@@ -82,7 +66,8 @@ export function createDialog<T, K>(Component: FC<ComponentProps<T>>) {
 
       const showDialog = (data: T): Promise<K> =>
         new Promise((resolve, reject) => {
-          setPromise(resolve, reject);
+          const handleResolver = (v?: K) => resolve(v as K);
+          setPromise(handleResolver, reject);
           open();
           setData(data);
         });
