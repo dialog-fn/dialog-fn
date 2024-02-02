@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Bump version and push tag
         id: tag_version
-        uses: mathieudutour/github-tag-action@v5.6
+        uses: mathieudutour/github-tag-action@v6.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Create a GitHub release
@@ -49,7 +49,7 @@ jobs:
         with:
           version: 8.14.0
       - run: pnpm i
-      - run: pnpm -- filter @dialog-fn/core build && pnpm build
+      - run: pnpm --filter @dialog-fn/core build && pnpm build
       - run: cd ${{matrix.package}} && npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -77,7 +77,7 @@ jobs:
         with:
           version: 8.14.0
       - run: pnpm i
-      - run: pnpm -- filter @dialog-fn/core build && pnpm build
+      - run: pnpm --filter @dialog-fn/core build && pnpm build
       - run: cd ${{matrix.package}} && npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
