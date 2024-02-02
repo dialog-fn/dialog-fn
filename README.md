@@ -3,7 +3,11 @@
 </p>
 
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mui/material-ui/blob/HEAD/LICENSE)
-[![npm latest package](https://img.shields.io/npm/v/@dialog-fn/react/latest.svg)](https://www.npmjs.com/package/@dialog-fn/react)
+![NPM Version](https://img.shields.io/npm/v/%40dialog-fn%2Freact?style=flat-square&logo=react&label=%40dialog-fn%2Freact)
+
+![NPM Version](https://img.shields.io/npm/v/%40dialog-fn%2Fsvelte?style=flat-square&logo=svelte&label=%40dialog-fn%2Fsvelte)
+
+
 
 # dialog-fn
 
