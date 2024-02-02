@@ -4,11 +4,27 @@
 name: Node.js Package
 
 on:
-  workflow_dispatch:
-  release:
-    types: [created]
+  push:
+    branches:
+      - main
 
 jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v5.6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create a GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
   publish-gpr:
     runs-on: ubuntu-latest
     permissions:
@@ -33,7 +49,7 @@ jobs:
         with:
           version: 8.14.0
       - run: pnpm i
-      - run: pnpm build
+      - run: pnpm -- filter @dialog-fn/core build && pnpm build
       - run: cd ${{matrix.package}} && npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -61,7 +77,7 @@ jobs:
         with:
           version: 8.14.0
       - run: pnpm i
-      - run: pnpm build
+      - run: pnpm -- filter @dialog-fn/core build && pnpm build
       - run: cd ${{matrix.package}} && npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
