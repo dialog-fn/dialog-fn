@@ -1,7 +1,11 @@
 import { FC } from "react";
 import { useSyncExternalStore } from "use-sync-external-store/shim";
 import { createStore } from "@dialog-fn/core";
-import type { DialogMutableState, DialogState } from "@dialog-fn/core";
+import type {
+  DialogMutableState,
+  DialogState,
+  DialogComponentProps,
+} from "@dialog-fn/core";
 
 type Get<T> = () => T;
 type Set<T, K> = (value: Partial<DialogMutableState<T, K>>) => void;
@@ -13,14 +17,9 @@ function createUniqueStore<T, K>(createState: StateCreator<T, K>) {
   return () => useSyncExternalStore(api.subscribe, api.getState);
 }
 
-export interface DialogProps<T, K> {
-  isOpen: boolean;
-  data: T;
-  onClose: () => void;
-  onConfirm: (response: K) => void;
-}
-
-export function createDialog<T, K>(DialogComponent: FC<DialogProps<T, K>>) {
+export function createDialog<T, K>(
+  DialogComponent: FC<DialogComponentProps<T, K>>
+) {
   const useDialog = createUniqueStore<DialogState<T, K>, K>(
     (set, get) =>
       ({

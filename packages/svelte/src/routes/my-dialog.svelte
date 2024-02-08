@@ -14,7 +14,7 @@
     }
 
 
-    const handleConfirm = ()=>{
+    const handleConfirm = () => {
         onConfirm({ custom:'foo-bar' })
     }
 </script>

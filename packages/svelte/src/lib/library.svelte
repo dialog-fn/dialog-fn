@@ -1,5 +1,7 @@
 <script lang="ts">
 import {createStore} from '@dialog-fn/core';
+import type {DialogComponentProps} from '@dialog-fn/core';
+import type { ComponentType, SvelteComponent } from 'svelte';
 import { readable } from 'svelte/store';
 
 
@@ -43,14 +45,15 @@ const dialogStore = storeToSvelte(createStore(
     })
 ));
 
-export let wrappedComponent:any
+export let wrappedComponent:ComponentType<SvelteComponent<DialogComponentProps>>
+
+
 export const showDialog = (data: any) =>
         new Promise((resolve, reject) => {
           $dialogStore.setPromise(resolve, reject);
           $dialogStore.open();
           $dialogStore.setData(data);
         });
-
 </script>
 
 <svelte:component this={wrappedComponent} isOpen={$dialogStore.isOpen} data={$dialogStore.data} onClose={$dialogStore.onClose} onConfirm={$dialogStore.onConfirm} />
