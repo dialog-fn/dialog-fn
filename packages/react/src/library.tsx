@@ -35,9 +35,9 @@ export function createDialog<T, K>(
           return set({ isOpen: false, data: {}, promise: {} });
         },
         onClose: () => {
-          const resolve = get().promise.resolve;
-          if (resolve) {
-            resolve();
+          const reject = get().promise.reject;
+          if (reject) {
+            reject();
           }
 
           return set({ isOpen: false, data: {}, promise: {} });
