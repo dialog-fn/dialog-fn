@@ -17,9 +17,7 @@ function createUniqueStore<T, K>(createState: StateCreator<T, K>) {
   return () => useSyncExternalStore(api.subscribe, api.getState);
 }
 
-export function createDialog<T, K>(
-  DialogComponent: FC<DialogComponentProps<T, K>>
-) {
+export function createDialog<T, K>() {
   const useDialog = createUniqueStore<DialogState<T, K>, K>(
     (set, get) =>
       ({
@@ -49,16 +47,18 @@ export function createDialog<T, K>(
   ) as () => DialogState<T, K>;
 
   return {
-    Dialog: () => {
-      const { isOpen, data, onClose, onConfirm } = useDialog();
-      return (
-        <DialogComponent
-          isOpen={isOpen}
-          data={data as T}
-          onClose={onClose}
-          onConfirm={onConfirm}
-        />
-      );
+    register: (DialogComponent: FC<DialogComponentProps<T, K>>) => {
+      return () => {
+        const { isOpen, data, onClose, onConfirm } = useDialog();
+        return (
+          <DialogComponent
+            isOpen={isOpen}
+            data={data as T}
+            onClose={onClose}
+            onConfirm={onConfirm}
+          />
+        );
+      };
     },
     useDialog: () => {
       const { setPromise, setData, open } = useDialog();

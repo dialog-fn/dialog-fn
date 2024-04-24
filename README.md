@@ -6,8 +6,6 @@
 ![NPM Version](https://img.shields.io/npm/v/%40dialog-fn%2Freact?style=flat-square&logo=react&label=%40dialog-fn%2Freact)
 ![NPM Version](https://img.shields.io/npm/v/%40dialog-fn%2Fsvelte?style=flat-square&logo=svelte&label=%40dialog-fn%2Fsvelte)
 
-
-
 # dialog-fn
 
 This is a very lightweight implementation, provider free, compatible with any kind of component since it use only native tools and adapted for different frameworks like react.
@@ -41,7 +39,9 @@ import MyDialog from "./my-dialog";
 import { createDialog } from "@dialog-fn/react";
 
 // you could also add type notation, eg: createDialog<Input, Output>(MyDialog)
-const { Dialog, useDialog } = createDialog(MyDialog);
+const { register, useDialog } = createDialog();
+
+const Dialog = register(MyDialog);
 
 export const Page = () => {
   const showDialog = useDialog();
@@ -66,7 +66,7 @@ export const Page = () => {
 
 ### register HOC
 
-When you wrap a component using `register` HOC it will pass 4 props to control the dialog:
+createDialog returns a `register` HOC, it will pass 4 props to your custom dialog component:
 
 - isOpen: boolean
 - onClose: () => void

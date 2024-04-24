@@ -20,6 +20,7 @@
     "declarationMap": true,
     "target": "ES2017",
     // "module": "commonjs" /* Generates corresponding .d.ts file */,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "moduleResolution": "Node"
   }
 }
