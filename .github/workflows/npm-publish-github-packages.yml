@@ -19,9 +19,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: Publish @dialo-fn/react
+          - name: Publish @dialog-fn/react
             package: packages/react
-          - name: Publish @dialo-fn/svelte
+          - name: Publish @dialog-fn/svelte
             package: packages/svelte
     steps:
       - uses: actions/checkout@v4
@@ -47,9 +47,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: Publish @dialo-fn/react
+          - name: Publish @dialog-fn/react
             package: packages/react
-          - name: Publish @dialo-fn/svelte
+          - name: Publish @dialog-fn/svelte
             package: packages/svelte
     steps:
       - uses: actions/checkout@v4
