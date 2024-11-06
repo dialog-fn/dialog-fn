@@ -10,7 +10,7 @@ export type DialogMutableState<T, K> = {
 type DialogHandlers<T, K> = {
   onClose: () => void;
   setPromise: (r: (value?: K) => void, re: (reason?: string) => void) => void;
-  setData: (data: T) => void;
+  setData: (data?: T) => void;
   open: () => void;
   onConfirm: () => void;
 };
@@ -40,7 +40,7 @@ export const createStore = (createState: any): any => {
     if (!Object.is(nextState, state)) {
       const previousState = state;
       state =
-        replace ?? (typeof nextState !== "object" || nextState === null)
+        (replace ?? (typeof nextState !== "object" || nextState === null))
           ? nextState
           : Object.assign({}, state, nextState);
       listeners.forEach((listener) => listener(state, previousState));
