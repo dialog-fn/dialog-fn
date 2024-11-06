@@ -63,7 +63,7 @@ export function createDialog<T, K>() {
     useDialog: () => {
       const { setPromise, setData, open } = useDialog();
 
-      const showDialog = (data: T extends undefined ? void : T): Promise<K> =>
+      const showDialog = (data?: T): Promise<K> =>
         new Promise((resolve, reject) => {
           const handleResolver = (v?: K) => resolve(v as K);
           setPromise(handleResolver, reject);
