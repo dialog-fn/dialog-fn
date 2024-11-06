@@ -25,16 +25,15 @@ jobs:
             package: packages/svelte
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
       - uses: actions/setup-node@v4
         with:
-          node-version: 21
+          node-version: 22.11
           registry-url: https://npm.pkg.github.com/
       - uses: pnpm/action-setup@v2
         with:
           version: 8.14.0
-      - run: bun install
-      - run: bun --filter @dialog-fn/core build && bun --filter @dialog-fn/react build & bun --filter @dialog-fn/svelte build
+      - run: pnpm install
+      - run: pnpm --filter @dialog-fn/core build && pnpm --filter @dialog-fn/react build & pnpm --filter @dialog-fn/svelte build
       - run: cd ${{matrix.package}} && npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -54,16 +53,15 @@ jobs:
             package: packages/svelte
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
       - uses: actions/setup-node@v4
         with:
-          node-version: 21
+          node-version: 22.11
           registry-url: https://registry.npmjs.org/
       - uses: pnpm/action-setup@v2
         with:
           version: 8.14.0
-      - run: bun install
-      - run: bun --filter @dialog-fn/core build && bun --filter @dialog-fn/react build & bun --filter @dialog-fn/svelte build
+      - run: pnpm install
+      - run: pnpm --filter @dialog-fn/core build && pnpm --filter @dialog-fn/react build & pnpm --filter @dialog-fn/svelte build
       - run: cd ${{matrix.package}} && npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
