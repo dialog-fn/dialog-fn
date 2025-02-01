@@ -1,4 +1,7 @@
-name: Node.js Package
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
+
+name: Publish packages
 
 on:
   workflow_dispatch:
@@ -6,92 +9,40 @@ on:
     types: [created]
 
 jobs:
-  build:
-    name: Build Packages
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Cache pnpm store
-        uses: actions/cache@v3
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22.11
-          # Se usa el registry de npm para la instalación de dependencias.
-          registry-url: https://registry.npmjs.org/
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8.14.0
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build packages
-        run: |
-          pnpm --filter @dialog-fn/core build && \
-          pnpm --filter @dialog-fn/react build && \
-          pnpm --filter @dialog-fn/svelte build
-
-      - name: Upload packages as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: packages-build
-          path: packages
-
   publish-gpr:
-    name: Publish to GitHub Packages
     runs-on: ubuntu-latest
-    needs: build
     permissions:
       contents: read
       packages: write
+    name: ${{ matrix.name }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - name: Publish @dialog-fn/react to GitHub Packages
+          - name: react
             package: packages/react
-          - name: Publish @dialog-fn/svelte to GitHub Packages
+          - name: svelte
             package: packages/svelte
     steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: packages-build
-          path: build
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22.11
           registry-url: https://npm.pkg.github.com/
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v2
         with:
           version: 8.14.0
-
-      - name: Publish to GitHub Packages
-        working-directory: build/${{ matrix.package }}
-        run: npm publish --access=public
+      - run: pnpm install
+      - run: pnpm --filter @dialog-fn/core build && pnpm --filter @dialog-fn/react build && pnpm --filter @dialog-fn/svelte build
+      - run: cd ${{matrix.package}} && npm publish --access=public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
   publish-npm:
-    name: Publish to NPM
     runs-on: ubuntu-latest
-    needs: build
     permissions:
       contents: read
       packages: write
+    name: ${{ matrix.name }}
     strategy:
       fail-fast: false
       matrix:
@@ -101,25 +52,16 @@ jobs:
           - name: Publish @dialog-fn/svelte to NPM
             package: packages/svelte
     steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: packages-build
-          path: build
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22.11
           registry-url: https://registry.npmjs.org/
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v2
         with:
           version: 8.14.0
-
-      - name: Publish to NPM
-        working-directory: build/${{ matrix.package }}
-        run: npm publish --access=public
+      - run: pnpm install
+      - run: pnpm --filter @dialog-fn/core build && pnpm --filter @dialog-fn/react build && pnpm --filter @dialog-fn/svelte build
+      - run: cd ${{matrix.package}} && npm publish --access=public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
