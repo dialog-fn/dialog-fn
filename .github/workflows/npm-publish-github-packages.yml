@@ -23,8 +23,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22.11
-          # Este registry se usa solo para la instalación de dependencias,
-          # no afecta el build
+          # Se usa el registry de npm para la instalación de dependencias.
           registry-url: https://registry.npmjs.org/
 
       - name: Setup pnpm
@@ -45,7 +44,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: packages-build
-          path: packages/  # Se sube toda la carpeta "packages"
+          path: packages
 
   publish-gpr:
     name: Publish to GitHub Packages
@@ -67,7 +66,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: packages-build
-          path: .
+          path: build
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -81,7 +80,7 @@ jobs:
           version: 8.14.0
 
       - name: Publish to GitHub Packages
-        working-directory: ${{ matrix.package }}
+        working-directory: build/${{ matrix.package }}
         run: npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -106,7 +105,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: packages-build
-          path: .
+          path: build
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -120,8 +119,7 @@ jobs:
           version: 8.14.0
 
       - name: Publish to NPM
-        working-directory: ${{ matrix.package }}
+        working-directory: build/${{ matrix.package }}
         run: npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
