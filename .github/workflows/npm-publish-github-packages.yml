@@ -42,7 +42,7 @@ jobs:
           pnpm --filter @dialog-fn/svelte build
 
       - name: Upload packages as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: packages-build
           path: packages/  # Se sube toda la carpeta "packages"
@@ -64,7 +64,7 @@ jobs:
             package: packages/svelte
     steps:
       - name: Download build artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: packages-build
           path: .
@@ -103,7 +103,7 @@ jobs:
             package: packages/svelte
     steps:
       - name: Download build artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: packages-build
           path: .
