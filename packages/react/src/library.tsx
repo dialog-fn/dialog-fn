@@ -17,7 +17,7 @@ function createUniqueStore<T, K>(createState: StateCreator<T, K>) {
   return () => useSyncExternalStore(api.subscribe, api.getState);
 }
 
-export function createDialog<T, K>() {
+export function createDialog<T=void, K=void>() {
   const useDialog = createUniqueStore<DialogState<T, K>, K>(
     (set, get) =>
       ({
@@ -41,15 +41,20 @@ export function createDialog<T, K>() {
           return set({ isOpen: false, data: {}, promise: {} });
         },
         setPromise: (r, re) => set({ promise: { resolve: r, reject: re } }),
-        setData: (data) => set({ data } as any),
+        setData: (data:T) => set({ data } as any),
         open: () => set({ isOpen: true }),
       }) as DialogState<T, K>
   ) as () => DialogState<T, K>;
 
   return {
-    register: (DialogComponent: FC<DialogComponentProps<T, K>>) => {
+    register: (DialogComponent: FC<DialogComponentProps<T, K>>, forceUnmount?: boolean) => {
       return () => {
         const { isOpen, data, onClose, onConfirm } = useDialog();
+
+        if(forceUnmount && !isOpen) {
+            return null
+        }
+
         return (
           <DialogComponent
             isOpen={isOpen}
@@ -63,7 +68,7 @@ export function createDialog<T, K>() {
     useDialog: () => {
       const { setPromise, setData, open } = useDialog();
 
-      const showDialog = (data?: T): Promise<K> =>
+      const showDialog = (data: T): Promise<K> =>
         new Promise((resolve, reject) => {
           const handleResolver = (v?: K) => resolve(v as K);
           setPromise(handleResolver, reject);

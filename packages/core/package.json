@@ -1,6 +1,6 @@
 {
   "name": "@dialog-fn/core",
-  "version": "1.9.0",
+  "version": "1.2.0",
   "private": false,
   "description": "Dialog Flow Functions",
   "main": "dist/main.js",

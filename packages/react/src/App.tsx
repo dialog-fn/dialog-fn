@@ -5,7 +5,7 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 
-const { register, useDialog } = createDialog();
+const { register, useDialog } = createDialog<{foo:string},{bar:string}>();
 
 const Dialog = register(MyDialog);
 
@@ -13,9 +13,9 @@ function App() {
   const myDialog = useDialog();
 
   const handleDialog = async () => {
-    const result = await myDialog({ fooo: "bar" });
+    const result = await myDialog({foo:'test'});
 
-    console.log({ result });
+    console.log(result.bar);
   };
 
   const [count, setCount] = useState(0);

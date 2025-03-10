@@ -5,7 +5,10 @@ export const MyDialog = ({
   data,
   onClose,
   onConfirm,
-}: DialogComponentProps<any, any>) => {
+}: DialogComponentProps<{foo:string}, {bar:string}>) => {
+  const handleConfirm = () =>{
+    onConfirm({bar:'demo'});
+  }
   return (
     <dialog open={isOpen}>
       <div>
@@ -13,7 +16,7 @@ export const MyDialog = ({
         <p>Is open: {isOpen?.toString()}</p>
         <p>Data: {JSON.stringify(data)}</p>
         <button onClick={onClose}>Close</button>
-        <button onClick={onConfirm}>Confirm</button>
+        <button onClick={handleConfirm}>Confirm</button>
       </div>
     </dialog>
   );

@@ -23,10 +23,10 @@ type Set<T, K> = (value: Partial<DialogMutableState<T, K>>) => void;
 export type StateCreator<T, K> = (set: Set<T, K>, get: Get<T>) => T;
 
 export interface DialogComponentProps<T = any, K = any> {
-  isOpen?: boolean;
+  isOpen: boolean;
   data?: T;
-  onClose?: () => void;
-  onConfirm?: (response?: K) => void;
+  onClose: () => void;
+  onConfirm: (response?: K) => void;
 }
 
 export const createStore = (createState: any): any => {
