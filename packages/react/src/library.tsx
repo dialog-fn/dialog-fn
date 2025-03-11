@@ -40,7 +40,12 @@ export function createDialog<T = void, K = void>(options?: RegisterOptions) {
                         resolve(data);
                     }
 
-                    return set({isOpen: false, data: {}, promise: {}});
+                    const newData: any = {isOpen: false, promise: {}}
+                    if (!options?.forceUnmount) {
+                        newData.data = {}
+                    }
+
+                    return set(newData);
                 },
                 onClose: () => {
                     const reject = get().promise.reject;
