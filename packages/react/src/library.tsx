@@ -12,8 +12,7 @@ type Set<T, K> = (value: Partial<DialogMutableState<T, K>>) => void;
 
 type StateCreator<T, K> = (set: Set<T, K>, get: Get<T>) => T;
 
-type RegisterOptions<T,K> = {
-    Wrapper?:  FC<DialogComponentProps<T, K> & { children: ReactNode } & HTMLAttributes<HTMLElement>>;
+type RegisterOptions = {
     forceUnmount?: boolean;
     delayUnmount?: number;
 }
@@ -53,7 +52,7 @@ export function createDialog<T = void, K = void>() {
     ) as () => DialogState<T, K>;
 
     return {
-        register: (DialogComponent: FC<DialogComponentProps<T, K>>, options?: RegisterOptions<T,K>) => {
+        register: (DialogComponent: FC<DialogComponentProps<T, K>>, options?: RegisterOptions) => {
             return () => {
                 const { forceUnmount, delayUnmount } = options ?? {};
                 const { isOpen, data, onClose, onConfirm } = useDialogStore();
