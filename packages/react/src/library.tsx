@@ -1,4 +1,4 @@
-import {FC, useEffect, useRef, useState} from "react";
+import {FC, useEffect, useRef} from "react";
 import {useSyncExternalStore} from "use-sync-external-store/shim";
 import {createStore} from "@dialog-fn/core";
 import type {
@@ -22,13 +22,18 @@ function createUniqueStore<T, K>(createState: StateCreator<T, K>) {
     return () => useSyncExternalStore(api.subscribe, api.getState);
 }
 
-export function createDialog<T = void, K = void>() {
+export function createDialog<T = void, K = void>(options?: RegisterOptions) {
     const useDialogStore = createUniqueStore<DialogState<T, K>, K>(
         (set, get) =>
             ({
                 isOpen: false,
                 data: {},
                 promise: {},
+                delayUnmount: options?.delayUnmount,
+                forceUnmount: options?.forceUnmount,
+                shouldRender: false,
+                hideRender: () => set({ shouldRender: false, data: {} }),
+                resetRender: () => set({ shouldRender: true }),
                 onConfirm: (data: K) => {
                     const resolve = get().promise.resolve;
                     if (resolve) {
@@ -43,26 +48,23 @@ export function createDialog<T = void, K = void>() {
                         reject();
                     }
 
-                    return set({isOpen: false, data: {}, promise: {}});
+                    return set({isOpen: false, promise: {}});
                 },
-                setPromise: (r, re) => set({promise: {resolve: r, reject: re}}),
+                setPromise: (r, re) => set({ promise: { resolve: r, reject: re } }),
                 setData: (data: T) => set({data} as any),
                 open: () => set({isOpen: true}),
             }) as DialogState<T, K>
     ) as () => DialogState<T, K>;
 
     return {
-        register: (DialogComponent: FC<DialogComponentProps<T, K>>, options?: RegisterOptions) => {
+        register: (DialogComponent: FC<DialogComponentProps<T, K>>) => {
             return () => {
-                const { forceUnmount, delayUnmount } = options ?? {};
-                const { isOpen, data, onClose, onConfirm } = useDialogStore();
-
-                const [shouldRender, setShouldRender] = useState(isOpen);
+                const { isOpen, data, onClose, onConfirm, delayUnmount, forceUnmount, shouldRender, hideRender, resetRender } = useDialogStore();
                 const timerRef = useRef<NodeJS.Timeout | null>(null);
 
                 useEffect(() => {
                     if (isOpen) {
-                        setShouldRender(true);
+                        resetRender()
                         if (timerRef.current) {
                             clearTimeout(timerRef.current);
                             timerRef.current = null;
@@ -70,11 +72,11 @@ export function createDialog<T = void, K = void>() {
                     } else if (forceUnmount) {
                         if (delayUnmount) {
                             timerRef.current = setTimeout(() => {
-                                setShouldRender(false);
+                                hideRender()
                                 timerRef.current = null;
                             }, delayUnmount);
                         } else {
-                            setShouldRender(false);
+                            hideRender()
                         }
                     }
                     return () => {

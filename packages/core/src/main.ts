@@ -5,6 +5,9 @@ export type DialogMutableState<T, K> = {
     resolve?: (value?: K) => void;
     reject?: (reason?: string) => void;
   };
+  shouldRender: boolean;
+  delayUnmount: number;
+  forceUnmount: boolean;
 };
 
 type DialogHandlers<T, K> = {
@@ -12,10 +15,15 @@ type DialogHandlers<T, K> = {
   setPromise: (r: (value?: K) => void, re: (reason?: string) => void) => void;
   setData: (data?: T) => void;
   open: () => void;
-  onConfirm: () => void;
+  onConfirm: (v?: K) => void;
 };
 
-export type DialogState<T, K> = DialogMutableState<T, K> & DialogHandlers<T, K>;
+type RenderController = {
+  resetRender: () => void;
+  hideRender: () => void;
+}
+
+export type DialogState<T, K> = DialogMutableState<T, K> & DialogHandlers<T, K> & RenderController;
 
 type Get<T> = () => T;
 type Set<T, K> = (value: Partial<DialogMutableState<T, K>>) => void;
