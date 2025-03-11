@@ -46,7 +46,8 @@ const dialogStore = storeToSvelte(createStore(
 ));
 
 export let wrappedComponent:ComponentType<SvelteComponent<DialogComponentProps>>
-
+export let forceUnmount: boolean = false;
+export let Wrapper: ComponentType<SvelteComponent<any>> | null = null;
 
 export const showDialog = (data: any) =>
         new Promise((resolve, reject) => {
@@ -56,4 +57,22 @@ export const showDialog = (data: any) =>
         });
 </script>
 
-<svelte:component this={wrappedComponent} isOpen={$dialogStore.isOpen} data={$dialogStore.data} onClose={$dialogStore.onClose} onConfirm={$dialogStore.onConfirm} />
+{#if !forceUnmount || $dialogStore.isOpen || Wrapper}
+    {#if Wrapper}
+        <svelte:component this={Wrapper}>
+            <svelte:component
+                    this={wrappedComponent}
+                    isOpen={$dialogStore.isOpen}
+                    data={$dialogStore.data}
+                    onClose={$dialogStore.onClose}
+                    onConfirm={$dialogStore.onConfirm} />
+        </svelte:component>
+    {:else}
+        <svelte:component
+                this={wrappedComponent}
+                isOpen={$dialogStore.isOpen}
+                data={$dialogStore.data}
+                onClose={$dialogStore.onClose}
+                onConfirm={$dialogStore.onConfirm} />
+    {/if}
+{/if}

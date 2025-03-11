@@ -51,7 +51,6 @@ export const createStore = (createState: any): any => {
 
   const subscribe = (listener) => {
     listeners.add(listener);
-    // Unsubscribe
     return () => listeners.delete(listener);
   };
 
