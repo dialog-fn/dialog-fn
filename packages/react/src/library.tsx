@@ -1,4 +1,4 @@
-import {FC, HTMLAttributes, ReactNode} from "react";
+import {FC, HTMLAttributes, ReactNode, useEffect, useRef, useState} from "react";
 import {useSyncExternalStore} from "use-sync-external-store/shim";
 import {createStore} from "@dialog-fn/core";
 import type {
@@ -15,6 +15,7 @@ type StateCreator<T, K> = (set: Set<T, K>, get: Get<T>) => T;
 type RegisterOptions<T,K> = {
     Wrapper?:  FC<DialogComponentProps<T, K> & { children: ReactNode } & HTMLAttributes<HTMLElement>>;
     forceUnmount?: boolean;
+    delayUnmount?: number;
 }
 
 function createUniqueStore<T, K>(createState: StateCreator<T, K>) {
@@ -54,32 +55,48 @@ export function createDialog<T = void, K = void>() {
     return {
         register: (DialogComponent: FC<DialogComponentProps<T, K>>, options?: RegisterOptions<T,K>) => {
             return () => {
-                const { Wrapper, forceUnmount } = options ?? {};
+                const { forceUnmount, delayUnmount } = options ?? {};
                 const { isOpen, data, onClose, onConfirm } = useDialogStore();
 
-                if (forceUnmount && !isOpen && !Wrapper) {
+                const [shouldRender, setShouldRender] = useState(isOpen);
+                const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+                useEffect(() => {
+                    if (isOpen) {
+                        setShouldRender(true);
+                        if (timerRef.current) {
+                            clearTimeout(timerRef.current);
+                            timerRef.current = null;
+                        }
+                    } else if (forceUnmount) {
+                        if (delayUnmount) {
+                            timerRef.current = setTimeout(() => {
+                                setShouldRender(false);
+                                timerRef.current = null;
+                            }, delayUnmount);
+                        } else {
+                            setShouldRender(false);
+                        }
+                    }
+                    return () => {
+                        if (timerRef.current) {
+                            clearTimeout(timerRef.current);
+                        }
+                    };
+                }, [isOpen, forceUnmount, delayUnmount]);
+
+                if (forceUnmount && !shouldRender) {
                     return null;
                 }
 
-                const dialog = (
+                return (
                     <DialogComponent
                         isOpen={isOpen}
                         data={data as T}
                         onClose={onClose}
                         onConfirm={onConfirm}
                     />
-                );
-
-                return Wrapper ? (
-                    <Wrapper
-                        isOpen={isOpen}
-                        data={data as T}
-                        onClose={onClose}
-                        onConfirm={onConfirm}
-                    >
-                        {dialog}
-                    </Wrapper>
-                ) : dialog;
+                )
             };
         },
         useDialog: () => {
