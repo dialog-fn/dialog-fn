@@ -59,7 +59,13 @@ export const showDialog = (data: any) =>
 
 {#if !forceUnmount || $dialogStore.isOpen || Wrapper}
     {#if Wrapper}
-        <svelte:component this={Wrapper}>
+        <svelte:component
+                this={Wrapper}
+                isOpen={$dialogStore.isOpen}
+                data={$dialogStore.data}
+                onClose={$dialogStore.onClose}
+                onConfirm={$dialogStore.onConfirm}
+        >
             <svelte:component
                     this={wrappedComponent}
                     isOpen={$dialogStore.isOpen}
