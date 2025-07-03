@@ -4,11 +4,18 @@ import {createStore} from "@dialog-fn/core";
 import type {
     DialogMutableState,
     DialogState,
-    DialogComponentProps,
 } from "@dialog-fn/core";
 
 type Get<T> = () => T;
 type Set<T, K> = (value: Partial<DialogMutableState<T, K>>) => void;
+
+interface DialogComponentProps<T = any, K = any, S = any>{
+    isOpen?: boolean;
+    data?: T;
+    onClose?: () => void;
+    onConfirm?: (response?: K) => void;
+    state?: S
+}
 
 type StateCreator<T, K> = (set: Set<T, K>, get: Get<T>) => T;
 
@@ -22,7 +29,7 @@ function createUniqueStore<T, K>(createState: StateCreator<T, K>) {
     return () => useSyncExternalStore(api.subscribe, api.getState);
 }
 
-export function createDialog<T = void, K = void>(options?: RegisterOptions) {
+export function createDialog<T = void, K = void, S = void>(options?: RegisterOptions) {
     const useDialogStore = createUniqueStore<DialogState<T, K>, K>(
         (set, get) =>
             ({
@@ -62,7 +69,7 @@ export function createDialog<T = void, K = void>(options?: RegisterOptions) {
     ) as () => DialogState<T, K>;
 
     return {
-        register: (DialogComponent: FC<DialogComponentProps<T, K>>): FC<Record<string, any>> => {
+        register: (DialogComponent: FC<DialogComponentProps<T, K, S>>): FC<S> => {
             return (state) => {
                 const { isOpen, data, onClose, onConfirm, delayUnmount, forceUnmount, shouldRender, hideRender, resetRender } = useDialogStore();
                 const timerRef = useRef<NodeJS.Timeout | null>(null);
