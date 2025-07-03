@@ -1,6 +1,6 @@
 {
 	"name": "@dialog-fn/svelte",
-	"version": "3.0.5",
+	"version": "3.1.0",
 	"homepage": "https://github.com/dialog-fn/dialog-fn?tab=readme-ov-file#dialog-fn",
 	"repository": {
 		"type": "git",

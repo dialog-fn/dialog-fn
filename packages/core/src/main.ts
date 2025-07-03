@@ -35,6 +35,7 @@ export interface DialogComponentProps<T = any, K = any> {
   data?: T;
   onClose: () => void;
   onConfirm: (response?: K) => void;
+  state?: Record<string, any>
 }
 
 export const createStore = (createState: any): any => {

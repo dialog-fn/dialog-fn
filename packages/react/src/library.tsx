@@ -62,8 +62,8 @@ export function createDialog<T = void, K = void>(options?: RegisterOptions) {
     ) as () => DialogState<T, K>;
 
     return {
-        register: (DialogComponent: FC<DialogComponentProps<T, K>>) => {
-            return () => {
+        register: (DialogComponent: FC<DialogComponentProps<T, K>>): FC<Record<string, any>> => {
+            return (state) => {
                 const { isOpen, data, onClose, onConfirm, delayUnmount, forceUnmount, shouldRender, hideRender, resetRender } = useDialogStore();
                 const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -101,6 +101,7 @@ export function createDialog<T = void, K = void>(options?: RegisterOptions) {
                         data={data as T}
                         onClose={onClose}
                         onConfirm={onConfirm}
+                        state={state}
                     />
                 )
             };

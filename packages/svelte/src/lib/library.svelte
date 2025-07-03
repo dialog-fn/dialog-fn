@@ -45,6 +45,7 @@
     export let dialogComponent: ComponentType<SvelteComponent<DialogComponentProps>>;
     export let forceUnmount: boolean = false;
     export let delayUnmount: number = 0;
+    export let customState: Record<string, any> = {};
 
     export const showDialog = (data: any): Promise<any> =>
         new Promise((resolve, reject) => {
@@ -88,5 +89,6 @@
             isOpen={$dialogStore.isOpen}
             data={$dialogStore.data}
             onClose={$dialogStore.onClose}
+            state={customState}
             onConfirm={$dialogStore.onConfirm} />
 {/if}
