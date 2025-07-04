@@ -9,7 +9,7 @@ import type {
 type Get<T> = () => T;
 type Set<T, K> = (value: Partial<DialogMutableState<T, K>>) => void;
 
-interface DialogComponentProps<T = any, K = any, S = any>{
+export interface DialogComponentProps<T = any, K = any, S = any>{
     isOpen?: boolean;
     data?: T;
     onClose?: () => void;
