@@ -102,7 +102,7 @@ export function createDialog<T = void, K = void, S = void>(options?: RegisterOpt
                     return null;
                 }
 
-                console.log('fn dialog', state)
+
                 return (
                     <DialogComponent
                         isOpen={isOpen}
