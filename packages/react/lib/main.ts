@@ -6,5 +6,5 @@ export interface DialogProps<T = any, K = any, S=any> {
   data?: T;
   onClose?: () => void;
   onConfirm?: (response?: K) => void;
-  status?: S;
+  state?: S;
 }

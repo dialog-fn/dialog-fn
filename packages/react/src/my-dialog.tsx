@@ -1,4 +1,4 @@
-import type { DialogComponentProps } from "@dialog-fn/core";
+import type { DialogComponentProps } from "../lib/main.ts";
 
 export const MyDialog = ({
   isOpen,
@@ -7,7 +7,7 @@ export const MyDialog = ({
   onConfirm,
 }: DialogComponentProps<{foo:string}, {bar:string}>) => {
   const handleConfirm = () =>{
-    onConfirm({bar:'demo'});
+    onConfirm?.({bar:'demo'});
   }
   return (
     <dialog open={isOpen}>
