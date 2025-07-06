@@ -115,7 +115,7 @@ export function createDialog<T = void, K = void, S = void>(options?: RegisterOpt
             };
         },
         useDialog: () => {
-            const {setPromise, setData, open} = useDialogStore();
+            const {setPromise, setData, open,onClose} = useDialogStore();
 
             const showDialog = (data: T): Promise<K> =>
                 new Promise((resolve, reject) => {
@@ -124,6 +124,11 @@ export function createDialog<T = void, K = void, S = void>(options?: RegisterOpt
                     open();
                     setData(data);
                 });
+
+
+            showDialog.close = () =>{
+                onClose();
+            }
 
             return showDialog;
         },
