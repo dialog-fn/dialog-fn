@@ -1,12 +1,9 @@
-import {FC, useEffect, useRef, useSyncExternalStore} from "react";
-import {createStore} from "@dialog-fn/core";
+import {FC, useEffect, useRef} from "react";
 import type {
-    DialogMutableState,
     DialogState,
 } from "@dialog-fn/core";
+import {create} from "zustand/react";
 
-type Get<T> = () => T;
-type Set<T, K> = (value: Partial<DialogMutableState<T, K>>) => void;
 
 export interface DialogComponentProps<T = any, K = any, S = any>{
     isOpen?: boolean;
@@ -16,20 +13,13 @@ export interface DialogComponentProps<T = any, K = any, S = any>{
     state?: S
 }
 
-type StateCreator<T, K> = (set: Set<T, K>, get: Get<T>) => T;
-
 type RegisterOptions = {
     forceUnmount?: boolean;
     delayUnmount?: number;
 }
 
-function createUniqueStore<T, K>(createState: StateCreator<T, K>) {
-    const api = createStore(createState) as any;
-    return () => useSyncExternalStore(api.subscribe, api.getState);
-}
-
 export function createDialog<T = void, K = void, S = void>(options?: RegisterOptions) {
-    const useDialogStore = createUniqueStore<DialogState<T, K>, K>(
+    const useDialogStore = create<DialogState<T, K>>(
         (set, get) =>
             ({
                 isOpen: false,
