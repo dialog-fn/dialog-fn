@@ -1,5 +1,4 @@
-import {FC, useEffect, useRef} from "react";
-import {useSyncExternalStore} from "use-sync-external-store/shim";
+import {FC, useEffect, useRef, useSyncExternalStore} from "react";
 import {createStore} from "@dialog-fn/core";
 import type {
     DialogMutableState,
