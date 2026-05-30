@@ -6,9 +6,7 @@ on:
   pull_request:
   workflow_dispatch:
 
-# Opt the bundled JS actions into the Node 24 runtime so the Node 20 deprecation
-# warning goes away (no version guessing needed). See:
-# https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+# Opt the bundled JS actions into the Node 24 runtime (clears the Node 20 deprecation warning).
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -31,9 +29,6 @@ jobs:
     # Only publishes when you manually trigger this workflow ("Run workflow" in the Actions tab).
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write # required for npm provenance
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -41,11 +36,17 @@ jobs:
         with:
           node-version: 22.11.0
           cache: pnpm
-          # Publish to the PUBLIC npm registry (npmjs.com), not GitHub Packages.
-          registry-url: https://registry.npmjs.org
       - run: pnpm install --frozen-lockfile
       - run: pnpm run build
-      - run: pnpm -r --filter "./packages/*" publish --no-git-checks --access public --provenance
+      # Configure auth on pnpm's OWN config (pnpm doesn't reliably read the temp
+      # .npmrc that setup-node writes), then verify the token actually authenticates.
+      - name: Configure npm auth and verify identity
+        run: |
+          pnpm config set //registry.npmjs.org/:_authToken "${NODE_AUTH_TOKEN}"
+          echo "Authenticated on npm as: $(pnpm whoami --registry https://registry.npmjs.org || echo '*** NOT AUTHENTICATED — check the NPM_TOKEN secret ***')"
         env:
-          # Add an npm automation token as the repo secret NPM_TOKEN.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish packages
+        run: pnpm -r --filter "./packages/*" publish --no-git-checks --access public
+        env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
