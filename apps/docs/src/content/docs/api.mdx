@@ -1,0 +1,58 @@
+---
+title: API reference
+description: Types and functions exported by @dialog-fn/react and @dialog-fn/core.
+---
+
+## `@dialog-fn/react`
+
+### `createDialog<T, K, S>(Component, options?) => DialogInstance<T, K, S>`
+
+| Param       | Type                              | Description                          |
+| ----------- | --------------------------------- | ------------------------------------ |
+| `Component` | `FC<DialogComponentProps<T,K,S>>` | Your dialog component.               |
+| `options`   | `DialogOptions`                   | Mount behavior (optional).           |
+
+### `DialogInstance<T, K, S>`
+
+| Member  | Type                | Description                                   |
+| ------- | ------------------- | --------------------------------------------- |
+| `Dialog`| `FC<{ state?: S }>` | Render once to mount the dialog.              |
+| `show`  | `ShowDialog<T, K>`  | Open and await the result.                    |
+| `close` | `() => void`        | Dismiss the dialog.                           |
+
+### `ShowDialog<T, K>`
+
+```ts
+interface ShowDialog<T, K> {
+  (data?: T): Promise<K | undefined>; // resolves confirm value, or undefined on dismiss
+  close: () => void;
+}
+```
+
+### `DialogComponentProps<T, K, S>`
+
+| Prop        | Type                  |
+| ----------- | --------------------- |
+| `isOpen`    | `boolean`             |
+| `data`      | `T`                   |
+| `onConfirm` | `(value?: K) => void` |
+| `onClose`   | `() => void`          |
+| `state`     | `S`                   |
+
+### `DialogOptions`
+
+| Option         | Type      | Default |
+| -------------- | --------- | ------- |
+| `forceUnmount` | `boolean` | `false` |
+| `delayUnmount` | `number`  | `0`     |
+
+## `@dialog-fn/core`
+
+The framework-agnostic store both adapters are built on. Use it to write an adapter for
+another framework.
+
+### `createDialogStore<T, K>(options?) => DialogStore<T, K>`
+
+Returns `{ getState, subscribe, open, close, confirm, setData, showDialog, destroy }`.
+`showDialog(data)` resolves with the confirm value or `undefined`; `subscribe(listener)`
+returns an unsubscribe function; `destroy()` settles any pending promise and clears listeners.

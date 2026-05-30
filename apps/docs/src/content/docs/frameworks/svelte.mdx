@@ -1,0 +1,73 @@
+---
+title: Svelte
+description: The @dialog-fn/svelte API — DialogRegister and bind:showDialog.
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+```sh
+npm install @dialog-fn/svelte
+```
+
+## `<DialogRegister>`
+
+Render `<DialogRegister>` with your dialog component and bind `showDialog` to get the
+imperative trigger:
+
+```svelte
+<script>
+  import { DialogRegister } from "@dialog-fn/svelte";
+  import MyDialog from "./MyDialog.svelte";
+
+  let showDialog;
+
+  async function open() {
+    // resolves the confirm value, or undefined when dismissed
+    const res = await showDialog({ foo: "bar" });
+    if (res) console.log(res);
+  }
+</script>
+
+<button on:click={open}>Open</button>
+
+<DialogRegister
+  dialogComponent={MyDialog}
+  bind:showDialog
+  forceUnmount={false}
+  delayUnmount={0}
+/>
+```
+
+`showDialog.close()` (or the standalone `close` export) dismisses programmatically.
+
+## Your dialog component
+
+<Tabs>
+  <TabItem label="MyDialog.svelte">
+
+```svelte
+<script>
+  // injected by @dialog-fn/svelte
+  export let isOpen = false;
+  export let data = {};
+  export let onClose = () => {};
+  export let onConfirm = (value) => {};
+</script>
+
+<dialog open={isOpen}>
+  <p>{data.message}</p>
+  <button on:click={onClose}>Cancel</button>
+  <button on:click={() => onConfirm(true)}>Confirm</button>
+</dialog>
+```
+
+  </TabItem>
+</Tabs>
+
+:::note
+`forceUnmount` / `delayUnmount` are read once when the component mounts. Because Svelte 4
+components aren't generic, `data` and the result are typed `any` — annotate `showDialog` at
+the call site for type safety.
+:::
+
+Want it editable? [Open the Svelte starter on StackBlitz ↗](https://stackblitz.com/fork/github/sveltejs/template).

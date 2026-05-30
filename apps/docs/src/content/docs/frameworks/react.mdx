@@ -1,0 +1,60 @@
+---
+title: React
+description: The @dialog-fn/react API — createDialog, show, and options.
+---
+
+```sh
+npm install @dialog-fn/react
+```
+
+## `createDialog(Component, options?)`
+
+Pass your dialog component; get back an instance:
+
+```tsx
+const { Dialog, show, close } = createDialog(MyDialog, {
+  /* forceUnmount, delayUnmount */
+});
+```
+
+- **`Dialog`** — render once, anywhere. Optional `state` prop forwards extra render-time
+  state: `<Dialog state={theme} />`.
+- **`show(data)`** — opens the dialog; returns `Promise<K | undefined>` (confirm value, or
+  `undefined` when dismissed). A **plain function** — usable in handlers, services, or outside
+  React entirely.
+- **`show.close()` / `close()`** — dismiss programmatically.
+
+Call `createDialog()` **once at module scope** — the store is a singleton shared by every
+render of `Dialog`.
+
+## Typed generics
+
+Types are inferred from your component's props, or set them explicitly:
+
+```tsx
+// inferred from MyDialog: DialogComponentProps<In, Out>
+const { show } = createDialog(MyDialog);
+
+// or explicit
+const { show } = createDialog<In, Out>(MyDialog);
+```
+
+## Your component
+
+```tsx
+import type { DialogComponentProps } from "@dialog-fn/react";
+
+function MyDialog({ isOpen, data, onClose, onConfirm }: DialogComponentProps<In, Out>) {
+  return (
+    <dialog open={isOpen}>
+      {/* call onConfirm(value) to resolve, onClose() to dismiss */}
+    </dialog>
+  );
+}
+```
+
+> **Accessibility:** `<dialog open>` is non-modal. For a real modal (focus trap, `Esc`,
+> backdrop), drive a `<dialog>` with `showModal()` in an effect and forward the native
+> `cancel` event to `onClose`.
+
+See it live in the [recipes](../../recipes/confirm/) or the full [API reference](../../api/).

@@ -1,0 +1,14 @@
+---
+title: Toast
+description: A non-blocking notification built from the same primitive — no provider, called from anywhere.
+---
+
+import Playground from "../../../components/Playground";
+import toastCode from "../../../examples/toast.tsx?raw";
+
+A toast is just `show()` without awaiting it, auto-dismissed on a timer. Because `show` is a
+**plain function**, you can wrap it in a `toast()` helper and call it from anywhere — an
+event, a data layer, a util — no hook, no provider. `forceUnmount` + `delayUnmount` give it a
+clean fade-out.
+
+<Playground client:visible code={toastCode} />

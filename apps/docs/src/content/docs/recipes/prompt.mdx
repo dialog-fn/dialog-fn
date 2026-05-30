@@ -1,0 +1,12 @@
+---
+title: Prompt / form
+description: Pass data into a dialog and get typed data back out.
+---
+
+import Playground from "../../../components/Playground";
+import promptCode from "../../../examples/prompt.tsx?raw";
+
+A form dialog shows the full data round-trip: `show({ title, initial })` passes data **in**,
+and `onConfirm({ name })` returns typed data **out**. The result is `{ name } | undefined`.
+
+<Playground client:visible code={promptCode} />

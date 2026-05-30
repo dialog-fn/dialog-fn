@@ -1,0 +1,49 @@
+:root {
+  --sl-color-accent-low: #2a1d4d;
+  --sl-color-accent: #7c3aed;
+  --sl-color-accent-high: #ddd6fe;
+}
+
+/* Live hero demo */
+.hero-demo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+.hero-demo__out {
+  font-size: 0.85rem;
+  color: var(--sl-color-gray-3);
+}
+.hero-btn {
+  font: inherit;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--sl-color-gray-5);
+  background: var(--sl-color-bg);
+  color: var(--sl-color-text);
+  cursor: pointer;
+}
+.hero-btn:hover {
+  background: var(--sl-color-gray-6);
+}
+.hero-btn--primary {
+  background: var(--sl-color-accent);
+  border-color: var(--sl-color-accent);
+  color: #fff;
+}
+.hero-btn--primary:hover {
+  filter: brightness(1.08);
+}
+
+/* Tighten the two-up framework comparison on the landing page */
+.framework-parity {
+  display: grid;
+  gap: 1rem;
+}
+@media (min-width: 50rem) {
+  .framework-parity {
+    grid-template-columns: 1fr 1fr;
+  }
+}

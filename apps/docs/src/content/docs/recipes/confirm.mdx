@@ -1,0 +1,38 @@
+---
+title: Confirm dialog
+description: Await a yes/no decision — the canonical dialog-as-a-promise.
+---
+
+import Playground from "../../../components/Playground";
+import confirmCode from "../../../examples/confirm.tsx?raw";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+The 101: open a dialog and `await` the answer. Confirm resolves `true`; dismissing resolves
+`undefined`. **Edit the code below — it runs live.**
+
+<Playground client:visible code={confirmCode} />
+
+The Svelte version is the same idea with `<DialogRegister>`:
+
+<Tabs>
+  <TabItem label="Svelte">
+
+```svelte
+<script>
+  import { DialogRegister } from "@dialog-fn/svelte";
+  import ConfirmDialog from "./ConfirmDialog.svelte";
+
+  let showDialog;
+
+  async function remove() {
+    const confirmed = await showDialog({ message: "This deletes the item." });
+    console.log(confirmed ? "confirmed" : "dismissed");
+  }
+</script>
+
+<button on:click={remove}>Delete item</button>
+<DialogRegister dialogComponent={ConfirmDialog} bind:showDialog />
+```
+
+  </TabItem>
+</Tabs>

@@ -1,0 +1,13 @@
+---
+title: Drawer / sheet
+description: Same primitive, different chrome — proves dialog-fn is render-agnostic.
+---
+
+import Playground from "../../../components/Playground";
+import drawerCode from "../../../examples/drawer.tsx?raw";
+
+`dialog-fn` doesn't care what you render. A slide-in drawer is the exact same `createDialog`
+flow as a modal — just different markup driven by `isOpen`. Here it stays mounted and animates
+with a CSS `transform` (no `forceUnmount`).
+
+<Playground client:visible code={drawerCode} />

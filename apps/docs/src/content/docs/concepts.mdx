@@ -1,0 +1,52 @@
+---
+title: Core concepts
+description: The promise model, the injected props, and the mount options — everything dialog-fn does, on one page.
+---
+
+`dialog-fn` does exactly one thing: it controls a dialog's **visibility** and turns the
+confirm/dismiss interaction into a **single promise**. Rendering, styling, and accessibility
+are yours.
+
+## The promise model
+
+`show(data)` returns a promise that **always resolves, never rejects**:
+
+- **Confirm** → resolves with the value you pass to `onConfirm(value)`.
+- **Dismiss** (close, supersede, or unmount) → resolves with `undefined`.
+
+```tsx
+const result = await show(data);
+if (result) {
+  // confirmed — `result` is your onConfirm value
+} else {
+  // dismissed
+}
+```
+
+Because it never rejects, you don't need `try/catch`. If you call `show()` again while a
+dialog is open, the previous promise resolves as dismissed (it never hangs).
+
+## Injected props
+
+Your component receives these (all optional, typed via `DialogComponentProps<T, K, S>`):
+
+| Prop          | Type                      | Description                                  |
+| ------------- | ------------------------- | -------------------------------------------- |
+| `isOpen`      | `boolean`                 | Whether the dialog is open.                  |
+| `data`        | `T`                       | The argument passed to `show(data)`.         |
+| `onConfirm`   | `(value?: K) => void`     | Call to resolve the promise with a value.    |
+| `onClose`     | `() => void`              | Call to dismiss (resolves `undefined`).      |
+| `state`       | `S`                       | Optional extra render-time state (see below).|
+
+## Mount options
+
+`createDialog(Component, options?)` accepts:
+
+| Option         | Type      | Default | Description                                                        |
+| -------------- | --------- | ------- | ----------------------------------------------------------------- |
+| `forceUnmount` | `boolean` | `false` | Unmount the component when closed (instead of just toggling open). |
+| `delayUnmount` | `number`  | `0`     | Ms to wait before unmounting — lets an exit transition finish.     |
+
+Leave both off and your component stays mounted, toggling on `isOpen` (great for CSS
+transitions). Turn them on for true unmount + exit animations — see the
+[Animated recipe](../recipes/animated/).

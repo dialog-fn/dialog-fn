@@ -1,0 +1,69 @@
+---
+title: dialog-fn
+description: One promise-dialog core, every framework. Drive any dialog as a single promise — open it, await the result.
+template: splash
+hero:
+  tagline: One promise-dialog core, every framework. Open a dialog, <code>await</code> the result.
+  actions:
+    - text: Get started
+      link: getting-started/
+      icon: right-arrow
+      variant: primary
+    - text: View on GitHub
+      link: https://github.com/dialog-fn/dialog-fn
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from "@astrojs/starlight/components";
+import HeroDemo from "../../components/HeroDemo";
+
+<HeroDemo client:load />
+
+## Why dialog-fn
+
+<CardGrid>
+  <Card title="Every framework" icon="puzzle">
+    The same promise-dialog model and identical semantics across **React**, **React
+    Native**, and **Svelte** — from one tiny core.
+  </Card>
+  <Card title="~1 KB, zero deps" icon="rocket">
+    Built on native primitives (React's `useSyncExternalStore`, Svelte stores). Nothing
+    to bundle but your own component.
+  </Card>
+  <Card title="No providers" icon="approve-check">
+    No context wrapper to mount. `show()` is a plain function — call it from handlers,
+    services, or anywhere.
+  </Card>
+  <Card title="Promise-based" icon="random">
+    `const res = await show(data)` resolves the confirm value, or `undefined` when
+    dismissed. It never rejects — no `try/catch`.
+  </Card>
+</CardGrid>
+
+## Same behavior, two frameworks
+
+<div class="framework-parity">
+
+```tsx
+// React
+const { Dialog, show } = createDialog(MyDialog);
+
+const res = await show({ name: "Ada" });
+if (res) save(res);
+```
+
+```svelte
+<!-- Svelte -->
+<DialogRegister
+  dialogComponent={MyDialog}
+  bind:showDialog
+/>
+
+const res = await showDialog({ name: "Ada" });
+```
+
+</div>
+
+Bring your own component — `dialog-fn` only controls visibility and the promise.
+Head to **[Getting started](getting-started/)** or jump into a **[recipe](recipes/confirm/)**.

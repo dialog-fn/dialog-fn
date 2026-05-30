@@ -1,0 +1,67 @@
+---
+title: Getting started
+description: Install dialog-fn and show your first dialog as a promise in under a minute.
+---
+
+import { Tabs, TabItem, Steps } from "@astrojs/starlight/components";
+
+## Install
+
+<Tabs syncKey="pm">
+  <TabItem label="npm">```sh npm install @dialog-fn/react ```</TabItem>
+  <TabItem label="pnpm">```sh pnpm add @dialog-fn/react ```</TabItem>
+  <TabItem label="yarn">```sh yarn add @dialog-fn/react ```</TabItem>
+</Tabs>
+
+Using Svelte? Install `@dialog-fn/svelte` instead — see the [Svelte guide](../frameworks/svelte/).
+
+## The mental model
+
+<Steps>
+
+1. **Wrap your component.** `createDialog(MyDialog)` returns a `Dialog` to render and a
+   `show` function to open it.
+
+2. **Render `<Dialog />` once.** Anywhere in your tree — no provider, no special placement.
+
+3. **`await show(data)`.** It resolves with the value you pass to `onConfirm`, or
+   `undefined` if the user dismisses.
+
+</Steps>
+
+## Your first dialog
+
+```tsx
+import { createDialog, type DialogComponentProps } from "@dialog-fn/react";
+
+// Your component receives the injected props — style it however you like.
+function MyDialog({ isOpen, data, onClose, onConfirm }: DialogComponentProps<{ name: string }, boolean>) {
+  return (
+    <dialog open={isOpen}>
+      <p>Delete {data?.name}?</p>
+      <button onClick={onClose}>Cancel</button>
+      <button onClick={() => onConfirm?.(true)}>Delete</button>
+    </dialog>
+  );
+}
+
+// Call once at module scope — types are inferred from MyDialog.
+const { Dialog, show } = createDialog(MyDialog);
+
+export function Page() {
+  async function remove() {
+    const confirmed = await show({ name: "report.pdf" });
+    if (confirmed) console.log("deleted");
+  }
+
+  return (
+    <>
+      <button onClick={remove}>Delete</button>
+      <Dialog />
+    </>
+  );
+}
+```
+
+That's the whole API. Next: the [core concepts](../concepts/), or copy-paste a
+[recipe](../recipes/confirm/) with a live, editable playground.

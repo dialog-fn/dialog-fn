@@ -1,0 +1,13 @@
+---
+title: Animated
+description: Play an exit transition before the dialog unmounts.
+---
+
+import Playground from "../../../components/Playground";
+import animatedCode from "../../../examples/animated.tsx?raw";
+
+To truly unmount a dialog **and** animate it out, combine `forceUnmount` (remove the node when
+closed) with `delayUnmount` (keep it around long enough for the transition to finish). The
+component reads `isOpen` to drive the enter/exit states.
+
+<Playground client:visible code={animatedCode} />

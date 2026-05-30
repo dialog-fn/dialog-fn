@@ -1,0 +1,30 @@
+{
+  "name": "@dialog-fn/docs",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "gen:playground": "node scripts/gen-playground-lib.mjs",
+    "predev": "pnpm run gen:playground",
+    "dev": "astro dev",
+    "prebuild": "pnpm run gen:playground",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/react": "^4.2.0",
+    "@astrojs/starlight": "^0.32.0",
+    "@codesandbox/sandpack-react": "^2.19.10",
+    "@dialog-fn/react": "workspace:*",
+    "astro": "^5.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "esbuild": "^0.24.2"
+  }
+}
