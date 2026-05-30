@@ -38,11 +38,11 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm run build
-      # Write the token to a root .npmrc (the most reliable place for pnpm to read it),
-      # then verify it actually authenticates before attempting to publish.
+      # Write the token to the HOME .npmrc so npm finds it no matter which directory
+      # each package is published from (a per-package .npmrc shadows the repo root one).
       - name: Configure npm auth and verify identity
         run: |
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" >> ~/.npmrc
           echo "npm identity: $(pnpm whoami --registry https://registry.npmjs.org || echo '*** 401 — the NPM_TOKEN secret is not a valid npm token (regenerate it) ***')"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
