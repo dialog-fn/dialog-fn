@@ -4,8 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
-  release:
-    types: [created]
+  workflow_dispatch:
 
 # Opt the bundled JS actions into the Node 24 runtime so the Node 20 deprecation
 # warning goes away (no version guessing needed). See:
@@ -29,8 +28,8 @@ jobs:
 
   publish:
     needs: test
-    # Only publishes when you create a GitHub Release.
-    if: github.event_name == 'release'
+    # Only publishes when you manually trigger this workflow ("Run workflow" in the Actions tab).
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       contents: read
