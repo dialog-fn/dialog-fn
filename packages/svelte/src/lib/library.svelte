@@ -1,11 +1,13 @@
 <script lang="ts">
-    import { createDialogStore } from '@dialog-fn/core';
-    import type { DialogComponentProps } from '@dialog-fn/core';
-    import type { ComponentType, SvelteComponent } from 'svelte';
+    import { createDialogStore } from './core.js';
+    import type { ComponentType } from 'svelte';
     import { onDestroy } from 'svelte';
     import { readable } from 'svelte/store';
 
-    export let dialogComponent: ComponentType<SvelteComponent<DialogComponentProps>>;
+    // Any Svelte component — it receives the injected DialogComponentProps
+    // (isOpen, data, onClose, onConfirm, state). Svelte 4 components aren't generic,
+    // so the props aren't statically enforced here.
+    export let dialogComponent: ComponentType;
     // forceUnmount/delayUnmount are read once when the store is created below;
     // changing them reactively after mount has no effect.
     export let forceUnmount = false;

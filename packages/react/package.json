@@ -59,14 +59,12 @@
     "test:coverage": "vitest run --coverage",
     "prepublishOnly": "npm run build"
   },
-  "dependencies": {
-    "@dialog-fn/core": "workspace:*"
-  },
   "peerDependencies": {
     "react": ">=18.2.0",
     "react-dom": ">=18.2.0"
   },
   "devDependencies": {
+    "@dialog-fn/core": "workspace:*",
     "@testing-library/jest-dom": "^6.4.8",
     "@testing-library/react": "^16.0.1",
     "@types/node": "^20.10.6",

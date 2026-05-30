@@ -22,7 +22,9 @@ export default defineConfig({
       fileName: "main",
     },
     rollupOptions: {
-      external: ["react", "react-dom", "react/jsx-runtime", "@dialog-fn/core"],
+      // @dialog-fn/core is intentionally NOT external — it is bundled in so the
+      // published package is self-contained (core is not published separately).
+      external: ["react", "react-dom", "react/jsx-runtime"],
     },
   },
 });

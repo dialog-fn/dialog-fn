@@ -35,10 +35,12 @@
 	},
 	"license": "MIT",
 	"scripts": {
+		"gen:core": "node scripts/gen-core.mjs",
+		"prepare": "node scripts/gen-core.mjs",
 		"dev": "vite dev",
 		"build": "vite build && pnpm run package",
 		"preview": "vite preview",
-		"package": "svelte-kit sync && svelte-package && publint",
+		"package": "pnpm run gen:core && svelte-kit sync && svelte-package && publint",
 		"prepublishOnly": "pnpm run package",
 		"test": "pnpm run test:unit",
 		"test:unit": "vitest run",
@@ -63,10 +65,8 @@
 	"peerDependencies": {
 		"svelte": "^4.0.0"
 	},
-	"dependencies": {
-		"@dialog-fn/core": "workspace:*"
-	},
 	"devDependencies": {
+		"@dialog-fn/core": "workspace:*",
 		"@playwright/test": "^1.28.1",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/kit": "^2.0.0",

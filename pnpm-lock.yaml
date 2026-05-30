@@ -62,11 +62,10 @@ importers:
         version: 2.1.9(@types/node@24.12.4)(jsdom@25.0.1)
 
   packages/react:
-    dependencies:
+    devDependencies:
       '@dialog-fn/core':
         specifier: workspace:*
         version: link:../core
-    devDependencies:
       '@testing-library/jest-dom':
         specifier: ^6.4.8
         version: 6.9.1
@@ -126,11 +125,10 @@ importers:
         version: 2.1.9(@types/node@20.17.6)(jsdom@25.0.1)
 
   packages/svelte:
-    dependencies:
+    devDependencies:
       '@dialog-fn/core':
         specifier: workspace:*
         version: link:../core
-    devDependencies:
       '@playwright/test':
         specifier: ^1.28.1
         version: 1.48.2

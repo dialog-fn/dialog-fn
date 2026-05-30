@@ -1,7 +1,7 @@
 {
   "name": "@dialog-fn/core",
   "version": "4.1.1",
-  "private": false,
+  "private": true,
   "description": "Framework-agnostic promise-dialog state machine — the core behind @dialog-fn/react and @dialog-fn/svelte.",
   "homepage": "https://dialog-fn.github.io/dialog-fn/",
   "repository": {
