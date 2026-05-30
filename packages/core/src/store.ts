@@ -43,15 +43,13 @@ export function createDialogStore<T = void, K = void>(
   // Drives the unmount lifecycle once the dialog has closed.
   const scheduleUnmount = () => {
     if (!forceUnmount) return;
-    if (delayUnmount > 0) {
-      if (!unmountTimer) {
-        unmountTimer = setTimeout(() => {
-          setState({ shouldRender: false });
-          unmountTimer = null;
-        }, delayUnmount);
-      }
-    } else {
+    if (delayUnmount <= 0) {
       setState({ shouldRender: false });
+    } else if (!unmountTimer) {
+      unmountTimer = setTimeout(() => {
+        setState({ shouldRender: false });
+        unmountTimer = null;
+      }, delayUnmount);
     }
   };
 
@@ -86,9 +84,14 @@ export function createDialogStore<T = void, K = void>(
 
   const showDialog = (data?: T): Promise<K | undefined> =>
     new Promise<K | undefined>((resolve, reject) => {
-      setState({ promise: { resolve: (value) => resolve(value), reject } });
-      open();
-      setData(data);
+      // Open in a single state update so listeners are notified once, not three times.
+      clearUnmountTimer();
+      setState({
+        isOpen: true,
+        shouldRender: true,
+        data: (data ?? {}) as Partial<T>,
+        promise: { resolve: (value) => resolve(value), reject },
+      });
     });
 
   const destroy = () => {
