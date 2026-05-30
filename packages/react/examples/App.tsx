@@ -3,16 +3,13 @@ import { createDialog } from "../lib/main";
 import { MyDialog } from "./my-dialog";
 import "./App.css";
 
-const { register, useDialog } = createDialog<{ foo: string }, { bar: string }>();
-
-const Dialog = register(MyDialog);
+const { Dialog, show } = createDialog<{ foo: string }, { bar: string }>(MyDialog);
 
 function App() {
-  const showDialog = useDialog();
   const [result, setResult] = useState<string>("");
 
   const handleDialog = async () => {
-    const response = await showDialog({ foo: "test" });
+    const response = await show({ foo: "test" });
     setResult(response ? `confirmed: ${response.bar}` : "dismissed");
   };
 

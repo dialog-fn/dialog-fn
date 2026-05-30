@@ -8,11 +8,21 @@
 
 # dialog-fn
 
-This is a very lightweight implementation, provider free, compatible with any kind of component since it use only native tools and adapted for different frameworks like react.
+**One promise-dialog core, every framework.** `dialog-fn` is a framework-agnostic core with
+first-class adapters for **React**, **React Native**, and **Svelte** — the same mental model
+and identical semantics everywhere. Drive any dialog component as a single promise: open it,
+`await` the result.
 
-Improve development experience using dialogs as promise function, this library transform your Dialog component and expose a handler to control the visibility and the confirm/cancel actions, using only a single promise.
+- 🧩 **Bring your own component** — fully unstyled and render-agnostic, no design lock-in
+- 🪶 **~1 KB, zero runtime dependencies** — built on native primitives (React's
+  `useSyncExternalStore`, Svelte stores)
+- 🚫 **No providers** — no context wrapper to mount
+- 🤝 **Promise-based** — `const res = await show(data)` resolves the confirm value, or
+  `undefined` when dismissed; it never rejects, so no `try/catch`
 
-`showDialog(data)` resolves with the value passed to `onConfirm`, or with `undefined` when the dialog is dismissed (closed). It never rejects, so you can `await` it without `try/catch`.
+> Other libraries solve this well for a single framework (e.g. `react-call`,
+> `@ebay/nice-modal-react`). `dialog-fn` matches their ergonomics and footprint on React —
+> and gives you the **same API across frameworks**.
 
 # Supported with popular frameworks
 
@@ -34,25 +44,21 @@ npm i @dialog-fn/svelte
 ## Example (react)
 
 > [!TIP]
-> Once you have wrapped your dialog with register function, you are able to place the Dialog component anywhere, thanks to dependency free implementation of this library
+> `show` is a plain function — call it from event handlers, services, or anywhere outside a
+> component. `<Dialog />` can live anywhere in your tree.
 
 ```jsx
-import MyDialog from "./my-dialog";
+import { MyDialog } from "./my-dialog";
 import { createDialog } from "@dialog-fn/react";
 
-// you could also add type notation, eg: createDialog<Input, Output>()
-// call createDialog() once at module scope — the store is a singleton.
-const { register, useDialog } = createDialog();
-
-const Dialog = register(MyDialog);
+// Pass your component in; call this once at module scope (the store is a singleton).
+// Types are inferred from MyDialog — or be explicit: createDialog<Input, Output>(MyDialog).
+const { Dialog, show } = createDialog(MyDialog);
 
 export const Page = () => {
-  const showDialog = useDialog();
-
-  const handleClik = async () => {
+  const handleClick = async () => {
     // you can pass any data to your dialog component
-    const data = { foo: "bar" };
-    const response = await showDialog(data);
+    const response = await show({ foo: "bar" });
     if (response) {
       // resolved with the value passed to onConfirm
       console.log(response);
@@ -64,7 +70,7 @@ export const Page = () => {
 
   return (
     <div>
-      <button onClick={handleClik}>demo</button>
+      <button onClick={handleClick}>demo</button>
       {/** your ui code */}
 
       <Dialog />
@@ -73,14 +79,23 @@ export const Page = () => {
 };
 ```
 
-### register HOC
+### What `createDialog` returns
 
-createDialog returns a `register` HOC, it will pass 4 props to your custom dialog component:
+`createDialog(MyDialog, options?)` returns:
+
+- **`Dialog`** — the component to render once (anywhere). Optionally takes a `state` prop for
+  extra render-time state.
+- **`show(data)`** — opens the dialog and returns a `Promise` that resolves with the
+  `onConfirm` value, or `undefined` when dismissed. Also exposes `show.close()` to dismiss
+  programmatically.
+- **`close()`** — dismiss the dialog (alias of `show.close()`).
+
+Your dialog component receives these injected props:
 
 - isOpen: boolean
-- onClose: () => void
-- onConfirm: (response: T) => void
 - data: T
+- onClose: () => void
+- onConfirm: (response: K) => void
 
 make sure your component is ready to recieve and handle these props
 

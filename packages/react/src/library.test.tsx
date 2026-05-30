@@ -1,6 +1,5 @@
 import "@testing-library/jest-dom/vitest";
-import { useState } from "react";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { createDialog } from "./library";
 import type { DialogComponentProps } from "./library";
@@ -8,35 +7,31 @@ import type { DialogComponentProps } from "./library";
 type In = { foo: string };
 type Out = { bar: string };
 
-function setup(options?: { forceUnmount?: boolean }) {
-  const { register, useDialog } = createDialog<In, Out>(options);
+const Body = (props: DialogComponentProps<In, Out>) => (
+  <div data-testid="dialog">
+    <span data-testid="open">{String(props.isOpen)}</span>
+    <span data-testid="data">{JSON.stringify(props.data)}</span>
+    <button onClick={() => props.onConfirm?.({ bar: "ok" })}>confirm</button>
+    <button onClick={() => props.onClose?.()}>close</button>
+  </div>
+);
 
-  const Dialog = register((props: DialogComponentProps<In, Out>) => (
-    <div data-testid="dialog">
-      <span data-testid="open">{String(props.isOpen)}</span>
-      <span data-testid="data">{JSON.stringify(props.data)}</span>
-      <button onClick={() => props.onConfirm?.({ bar: "ok" })}>confirm</button>
-      <button onClick={() => props.onClose?.()}>close</button>
-    </div>
-  ));
+function setup(options?: { forceUnmount?: boolean }) {
+  // No explicit generics — In/Out are inferred from Body's props (verified by tsc).
+  const { Dialog, show } = createDialog(Body, options);
 
   const onResolve = vi.fn();
   const onReject = vi.fn();
 
-  const Harness = () => {
-    const showDialog = useDialog();
-    return (
-      <>
-        <button onClick={() => showDialog({ foo: "bar" }).then(onResolve, onReject)}>
-          show
-        </button>
-        <Dialog />
-      </>
-    );
-  };
+  const Harness = () => (
+    <>
+      <button onClick={() => show({ foo: "bar" }).then(onResolve, onReject)}>show</button>
+      <Dialog />
+    </>
+  );
 
   render(<Harness />);
-  return { onResolve, onReject };
+  return { Dialog, show, onResolve, onReject };
 }
 
 describe("createDialog (react adapter)", () => {
@@ -69,19 +64,20 @@ describe("createDialog (react adapter)", () => {
     expect(screen.getByTestId("open")).toHaveTextContent("false");
   });
 
-  it("returns a stable showDialog across re-renders", () => {
-    const { useDialog } = createDialog<In, Out>();
-    const seen: Array<() => unknown> = [];
-    const Probe = () => {
-      const [, force] = useState(0);
-      const showDialog = useDialog();
-      seen.push(showDialog);
-      return <button onClick={() => force((n) => n + 1)}>rerender</button>;
-    };
-    render(<Probe />);
-    fireEvent.click(screen.getByText("rerender"));
-    expect(seen.length).toBeGreaterThanOrEqual(2);
-    expect(seen[0]).toBe(seen[seen.length - 1]);
+  it("show() works when called outside any component", async () => {
+    const { Dialog, show } = createDialog(Body);
+    render(<Dialog />);
+    expect(screen.getByTestId("open")).toHaveTextContent("false");
+
+    // No hook, no event handler — just call the function directly.
+    let result: Out | undefined | "pending" = "pending";
+    act(() => {
+      show({ foo: "bar" }).then((r) => (result = r));
+    });
+    expect(screen.getByTestId("open")).toHaveTextContent("true");
+
+    fireEvent.click(screen.getByText("confirm"));
+    await waitFor(() => expect(result).toEqual({ bar: "ok" }));
   });
 
   it("unmounts the dialog when forceUnmount is enabled", () => {
