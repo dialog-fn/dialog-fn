@@ -18,6 +18,8 @@ and identical semantics everywhere. Drive any dialog component as a single promi
 
 ### 📖 [Read the docs &amp; try the live playground →](https://dialog-fn.github.io/dialog-fn/)
 
+**Install:** [`@dialog-fn/react`](https://www.npmjs.com/package/@dialog-fn/react) &nbsp;·&nbsp; [`@dialog-fn/svelte`](https://www.npmjs.com/package/@dialog-fn/svelte) &nbsp;·&nbsp; [GitHub](https://github.com/dialog-fn/dialog-fn)
+
 - 🧩 **Bring your own component** — fully unstyled and render-agnostic, no design lock-in
 - 🪶 **~1 KB, zero runtime dependencies** — built on native primitives (React's
   `useSyncExternalStore`, Svelte stores)
