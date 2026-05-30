@@ -6,10 +6,10 @@ import DialogRegister from '../lib/library.svelte'
 let showDialog
 
 const handleDialog = async () => {
-    try {
-        const response = await showDialog({foo:'bar'})
+    const response = await showDialog({foo:'bar'})
+    if (response) {
         console.log('confirmed', response)
-    } catch {
+    } else {
         console.log('dismissed')
     }
 }

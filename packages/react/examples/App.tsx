@@ -12,12 +12,8 @@ function App() {
   const [result, setResult] = useState<string>("");
 
   const handleDialog = async () => {
-    try {
-      const response = await showDialog({ foo: "test" });
-      setResult(`confirmed: ${response?.bar ?? ""}`);
-    } catch {
-      setResult("dismissed");
-    }
+    const response = await showDialog({ foo: "test" });
+    setResult(response ? `confirmed: ${response.bar}` : "dismissed");
   };
 
   return (

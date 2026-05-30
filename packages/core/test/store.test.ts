@@ -26,12 +26,29 @@ describe("createDialogStore", () => {
     expect(store.getState().isOpen).toBe(false);
   });
 
-  it("rejects the promise when closed", async () => {
+  it("resolves with undefined when dismissed (closed)", async () => {
     const store = createDialogStore();
     const result = store.showDialog();
     store.close();
-    await expect(result).rejects.toBeUndefined();
+    await expect(result).resolves.toBeUndefined();
     expect(store.getState().isOpen).toBe(false);
+  });
+
+  it("resolves the previous promise as dismissed when superseded", async () => {
+    const store = createDialogStore<void, { bar: string }>();
+    const first = store.showDialog();
+    const second = store.showDialog();
+    // The superseded call settles instead of hanging forever.
+    await expect(first).resolves.toBeUndefined();
+    store.confirm({ bar: "ok" });
+    await expect(second).resolves.toEqual({ bar: "ok" });
+  });
+
+  it("resolves a pending promise as dismissed on destroy", async () => {
+    const store = createDialogStore();
+    const result = store.showDialog();
+    store.destroy();
+    await expect(result).resolves.toBeUndefined();
   });
 
   it("clears data after confirm when forceUnmount is off", async () => {
@@ -42,12 +59,13 @@ describe("createDialogStore", () => {
     expect(store.getState().data).toEqual({});
   });
 
-  it("keeps data after confirm when forceUnmount is on", async () => {
+  it("clears data on unmount when forceUnmount is on without delay", async () => {
     const store = createDialogStore<{ foo: string }, void>({ forceUnmount: true });
     const result = store.showDialog({ foo: "bar" });
     store.confirm();
     await result;
-    expect(store.getState().data).toEqual({ foo: "bar" });
+    expect(store.getState().shouldRender).toBe(false);
+    expect(store.getState().data).toEqual({});
   });
 
   it("notifies subscribers and stops after unsubscribe", () => {
@@ -103,6 +121,21 @@ describe("createDialogStore", () => {
         vi.advanceTimersByTime(200);
         expect(store.getState().shouldRender).toBe(true);
         expect(store.getState().isOpen).toBe(true);
+      });
+
+      it("keeps data during the delay window, then clears it on unmount", () => {
+        const store = createDialogStore<{ foo: string }, void>({
+          forceUnmount: true,
+          delayUnmount: 200,
+        });
+        store.showDialog({ foo: "bar" });
+        store.confirm();
+        // Still mounted and readable while the exit animation plays.
+        expect(store.getState().data).toEqual({ foo: "bar" });
+        vi.advanceTimersByTime(200);
+        // Unmounted and cleared afterwards.
+        expect(store.getState().shouldRender).toBe(false);
+        expect(store.getState().data).toEqual({});
       });
     });
   });

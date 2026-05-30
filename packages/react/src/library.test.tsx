@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom/vitest";
+import { useState } from "react";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { createDialog } from "./library";
@@ -59,12 +60,28 @@ describe("createDialog (react adapter)", () => {
     expect(screen.getByTestId("open")).toHaveTextContent("false");
   });
 
-  it("rejects when closed", async () => {
-    const { onReject } = setup();
+  it("resolves with undefined when dismissed", async () => {
+    const { onResolve, onReject } = setup();
     fireEvent.click(screen.getByText("show"));
     fireEvent.click(screen.getByText("close"));
-    await waitFor(() => expect(onReject).toHaveBeenCalled());
+    await waitFor(() => expect(onResolve).toHaveBeenCalledWith(undefined));
+    expect(onReject).not.toHaveBeenCalled();
     expect(screen.getByTestId("open")).toHaveTextContent("false");
+  });
+
+  it("returns a stable showDialog across re-renders", () => {
+    const { useDialog } = createDialog<In, Out>();
+    const seen: Array<() => unknown> = [];
+    const Probe = () => {
+      const [, force] = useState(0);
+      const showDialog = useDialog();
+      seen.push(showDialog);
+      return <button onClick={() => force((n) => n + 1)}>rerender</button>;
+    };
+    render(<Probe />);
+    fireEvent.click(screen.getByText("rerender"));
+    expect(seen.length).toBeGreaterThanOrEqual(2);
+    expect(seen[0]).toBe(seen[seen.length - 1]);
   });
 
   it("unmounts the dialog when forceUnmount is enabled", () => {

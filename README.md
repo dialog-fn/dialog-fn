@@ -12,6 +12,8 @@ This is a very lightweight implementation, provider free, compatible with any ki
 
 Improve development experience using dialogs as promise function, this library transform your Dialog component and expose a handler to control the visibility and the confirm/cancel actions, using only a single promise.
 
+`showDialog(data)` resolves with the value passed to `onConfirm`, or with `undefined` when the dialog is dismissed (closed). It never rejects, so you can `await` it without `try/catch`.
+
 # Supported with popular frameworks
 
 | Framework    | supported |
@@ -38,7 +40,8 @@ npm i @dialog-fn/svelte
 import MyDialog from "./my-dialog";
 import { createDialog } from "@dialog-fn/react";
 
-// you could also add type notation, eg: createDialog<Input, Output>(MyDialog)
+// you could also add type notation, eg: createDialog<Input, Output>()
+// call createDialog() once at module scope — the store is a singleton.
 const { register, useDialog } = createDialog();
 
 const Dialog = register(MyDialog);
@@ -49,12 +52,12 @@ export const Page = () => {
   const handleClik = async () => {
     // you can pass any data to your dialog component
     const data = { foo: "bar" };
-    try {
-      // resolves with the value passed to onConfirm
-      const response = await showDialog(data);
+    const response = await showDialog(data);
+    if (response) {
+      // resolved with the value passed to onConfirm
       console.log(response);
-    } catch {
-      // rejects when the user closes/dismisses the dialog
+    } else {
+      // resolved with undefined because the user dismissed the dialog
       console.log("dismissed");
     }
   };
@@ -118,11 +121,11 @@ import { DialogRegister } from '@dialog-fn/svelte'
 let showDialog
 
 const handleDialog = async () => {
-    try {
-        const response = await showDialog({foo:'bar'})
+    const response = await showDialog({foo:'bar'})
+    if (response) {
         console.log('confirmed', response)
-    } catch {
-        // the promise rejects when the user dismisses the dialog
+    } else {
+        // resolved with undefined because the user dismissed the dialog
         console.log('dismissed')
     }
 }
@@ -164,4 +167,33 @@ Your custom dialog component should be able to handle the injected props coming 
       <button on:click={handleConfirm}>Confirm</button>
     </div>
   </dialog>
+```
+
+## Accessibility
+
+`dialog-fn` only controls visibility and the confirm/dismiss promise — **rendering and
+accessibility are up to your component.** The examples above use the native `<dialog open>`
+attribute, which is *non-modal*: it does not trap focus, dim the background, or close on
+`Esc`.
+
+For a real modal, drive a `<dialog>` with `showModal()` and forward the native `cancel`
+event (fired on `Esc`) to `onClose`:
+
+```jsx
+export const MyDialog = ({ isOpen, data, onClose, onConfirm }) => {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (isOpen && !el.open) el.showModal(); // focus trap + backdrop + Esc
+    if (!isOpen && el.open) el.close();
+  }, [isOpen]);
+
+  return (
+    <dialog ref={ref} onCancel={onClose} onClose={onClose}>
+      {/* ...your content, call onConfirm(value) to resolve... */}
+    </dialog>
+  );
+};
 ```

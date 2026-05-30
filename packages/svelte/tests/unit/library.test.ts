@@ -24,13 +24,22 @@ describe('DialogRegister (svelte adapter)', () => {
 		expect(screen.getByTestId('open')).toHaveTextContent('false');
 	});
 
-	it('rejects when dismissed', async () => {
+	it('resolves with undefined when dismissed', async () => {
 		const { component } = render(DialogRegister, { props: { dialogComponent: TestDialog } });
 		const result = (component as any).showDialog({ foo: 'bar' });
 		await tick();
 
 		await fireEvent.click(screen.getByText('close'));
-		await expect(result).rejects.toBeUndefined();
+		await expect(result).resolves.toBeUndefined();
+	});
+
+	it('exposes showDialog.close() for parity with react', async () => {
+		const { component } = render(DialogRegister, { props: { dialogComponent: TestDialog } });
+		const result = (component as any).showDialog({ foo: 'bar' });
+		await tick();
+
+		(component as any).showDialog.close();
+		await expect(result).resolves.toBeUndefined();
 	});
 
 	it('stays unmounted until opened when forceUnmount is set', async () => {

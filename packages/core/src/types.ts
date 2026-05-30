@@ -19,7 +19,6 @@ export interface DialogComponentProps<T = unknown, K = unknown, S = unknown> {
 
 export interface DialogPromise<K> {
   resolve?: (value?: K) => void;
-  reject?: (reason?: unknown) => void;
 }
 
 export interface DialogStoreState<T, K> {
@@ -45,12 +44,15 @@ export interface DialogStore<T, K> {
   subscribe: (listener: DialogListener<T, K>) => () => void;
   /** Open the dialog without arming the promise (rarely needed directly). */
   open: () => void;
-  /** User cancelled — rejects the pending promise and resets state. */
+  /** User dismissed — resolves the pending promise with `undefined` and resets state. */
   close: () => void;
   /** User confirmed — resolves the pending promise with `value` and resets state. */
   confirm: (value?: K) => void;
   setData: (data?: T) => void;
-  /** Open the dialog and await the user's confirm (resolve) / close (reject). */
+  /**
+   * Open the dialog and await the result: resolves with the confirm value, or with
+   * `undefined` when dismissed. Never rejects.
+   */
   showDialog: (data?: T) => Promise<K | undefined>;
   /** Clear timers and listeners. Call when the host component unmounts. */
   destroy: () => void;
