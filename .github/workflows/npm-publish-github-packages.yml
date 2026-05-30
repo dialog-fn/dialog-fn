@@ -38,12 +38,12 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm run build
-      # Configure auth on pnpm's OWN config (pnpm doesn't reliably read the temp
-      # .npmrc that setup-node writes), then verify the token actually authenticates.
+      # Write the token to a root .npmrc (the most reliable place for pnpm to read it),
+      # then verify it actually authenticates before attempting to publish.
       - name: Configure npm auth and verify identity
         run: |
-          pnpm config set //registry.npmjs.org/:_authToken "${NODE_AUTH_TOKEN}"
-          echo "Authenticated on npm as: $(pnpm whoami --registry https://registry.npmjs.org || echo '*** NOT AUTHENTICATED — check the NPM_TOKEN secret ***')"
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
+          echo "npm identity: $(pnpm whoami --registry https://registry.npmjs.org || echo '*** 401 — the NPM_TOKEN secret is not a valid npm token (regenerate it) ***')"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Publish packages
