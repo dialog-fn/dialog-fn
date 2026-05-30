@@ -1,4 +1,4 @@
-name: Node.js Package
+name: Publish to npm
 
 on:
   push:
@@ -6,6 +6,12 @@ on:
   pull_request:
   release:
     types: [created]
+
+# Opt the bundled JS actions into the Node 24 runtime so the Node 20 deprecation
+# warning goes away (no version guessing needed). See:
+# https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   test:
@@ -23,11 +29,12 @@ jobs:
 
   publish:
     needs: test
+    # Only publishes when you create a GitHub Release.
     if: github.event_name == 'release'
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write
+      id-token: write # required for npm provenance
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -35,9 +42,11 @@ jobs:
         with:
           node-version: 22.11.0
           cache: pnpm
-          registry-url: https://npm.pkg.github.com
+          # Publish to the PUBLIC npm registry (npmjs.com), not GitHub Packages.
+          registry-url: https://registry.npmjs.org
       - run: pnpm install --frozen-lockfile
       - run: pnpm run build
-      - run: pnpm -r --filter "./packages/*" publish --no-git-checks --access public
+      - run: pnpm -r --filter "./packages/*" publish --no-git-checks --access public --provenance
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Add an npm automation token as the repo secret NPM_TOKEN.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
