@@ -1,4 +1,4 @@
-name: Publish to npm
+name: Publish
 
 on:
   push:
@@ -24,11 +24,16 @@ jobs:
       - run: pnpm run build
       - run: pnpm run test
 
-  publish:
+  # One parallel job per package → npmjs.com.
+  publish-npm:
+    name: npm (${{ matrix.package }})
     needs: test
-    # Only publishes when you manually trigger this workflow ("Run workflow" in the Actions tab).
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [react, svelte]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -38,15 +43,46 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm run build
-      # Write the token to the HOME .npmrc so npm finds it no matter which directory
-      # each package is published from (a per-package .npmrc shadows the repo root one).
-      - name: Configure npm auth and verify identity
+      - name: Configure npm auth
+        run: echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" >> ~/.npmrc
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # `-r` skips the package if this version is already published.
+      - name: Publish @dialog-fn/${{ matrix.package }}
+        run: pnpm -r --filter "@dialog-fn/${{ matrix.package }}" publish --no-git-checks --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  # One parallel job per package → GitHub Packages. Best-effort: ignored if it isn't set up.
+  publish-gpr:
+    name: GitHub Packages (${{ matrix.package }})
+    needs: test
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [react, svelte]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.11.0
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+      - name: Configure GitHub Packages auth
         run: |
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" >> ~/.npmrc
-          echo "npm identity: $(pnpm whoami --registry https://registry.npmjs.org || echo '*** 401 — the NPM_TOKEN secret is not a valid npm token (regenerate it) ***')"
+          echo "@dialog-fn:registry=https://npm.pkg.github.com" >> ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> ~/.npmrc
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: Publish packages
-        run: pnpm -r --filter "./packages/*" publish --no-git-checks --access public
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish @dialog-fn/${{ matrix.package }}
+        run: pnpm -r --filter "@dialog-fn/${{ matrix.package }}" publish --no-git-checks
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
