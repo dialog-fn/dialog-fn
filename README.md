@@ -49,8 +49,14 @@ export const Page = () => {
   const handleClik = async () => {
     // you can pass any data to your dialog component
     const data = { foo: "bar" };
-    const response = await showDialog(data);
-    console.log(response);
+    try {
+      // resolves with the value passed to onConfirm
+      const response = await showDialog(data);
+      console.log(response);
+    } catch {
+      // rejects when the user closes/dismisses the dialog
+      console.log("dismissed");
+    }
   };
 
   return (
@@ -107,13 +113,18 @@ export const MyDialog = ({ isOpen, data, onClose, onConfirm }) => {
 ```svelte
 <script>
 import MyDialog from './my-dialog.svelte'
-import { DialogRegister } from '@dialog-fn/react'
+import { DialogRegister } from '@dialog-fn/svelte'
 
 let showDialog
 
 const handleDialog = async () => {
-    const response = await showDialog({foo:'bar'})
-    console.log(response)
+    try {
+        const response = await showDialog({foo:'bar'})
+        console.log('confirmed', response)
+    } catch {
+        // the promise rejects when the user dismisses the dialog
+        console.log('dismissed')
+    }
 }
 
 </script>
@@ -122,7 +133,7 @@ const handleDialog = async () => {
 <p>this is a demo example</p>
 <button on:click={handleDialog} >hello</button>
 
-<DialogRegister wrappedComponent={MyDialog} bind:showDialog={showDialog} />
+<DialogRegister dialogComponent={MyDialog} bind:showDialog={showDialog} />
 ```
 
 Your custom dialog component should be able to handle the injected props coming from <DialogRegister/> for example:

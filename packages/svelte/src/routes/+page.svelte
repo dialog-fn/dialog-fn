@@ -2,12 +2,16 @@
 import MyDialog from './my-dialog.svelte'
 import DialogRegister from '../lib/library.svelte'
 
-/** @type any */
+/** @type {any} */
 let showDialog
 
 const handleDialog = async () => {
-    const response = await showDialog({foo:'bar'})
-    console.log(response)
+    try {
+        const response = await showDialog({foo:'bar'})
+        console.log('confirmed', response)
+    } catch {
+        console.log('dismissed')
+    }
 }
 
   </script>
@@ -16,4 +20,4 @@ const handleDialog = async () => {
 <p>this is a demo example</p>
 <button on:click={handleDialog} >hello</button>
 
-<DialogRegister wrappedComponent={MyDialog} bind:showDialog={showDialog} />
+<DialogRegister dialogComponent={MyDialog} bind:showDialog={showDialog} />

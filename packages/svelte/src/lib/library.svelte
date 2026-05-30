@@ -1,94 +1,33 @@
 <script lang="ts">
-    import { createStore } from '@dialog-fn/core';
+    import { createDialogStore } from '@dialog-fn/core';
     import type { DialogComponentProps } from '@dialog-fn/core';
     import type { ComponentType, SvelteComponent } from 'svelte';
-    import { readable } from 'svelte/store';
     import { onDestroy } from 'svelte';
-
-    function storeToSvelte(store: any) {
-        const svelteStore = readable(store.getState(), (set) => {
-            const unsubscribe = store.subscribe((value: any) => set(value));
-            return unsubscribe;
-        });
-        return {
-            ...store,
-            subscribe: svelteStore.subscribe
-        };
-    }
-
-    const dialogStore = storeToSvelte(
-        createStore((set: any, get: any) => ({
-            isOpen: false,
-            data: {},
-            promise: {},
-            onClose: () => {
-                const reject = get().promise.reject;
-                if (reject) {
-                    reject();
-                }
-                return set({ isOpen: false, data: {}, promise: {} });
-            },
-            setPromise: (resolve: any, reject: any) =>
-                set({ promise: { resolve, reject } }),
-            setData: (data: any) => set({ data }),
-            open: () => set({ isOpen: true }),
-            onConfirm: (data: any) => {
-                const resolve = get().promise.resolve;
-                if (resolve) {
-                    resolve(data);
-                }
-                return set({ isOpen: false, data: {}, promise: {} });
-            },
-        }))
-    );
+    import { readable } from 'svelte/store';
 
     export let dialogComponent: ComponentType<SvelteComponent<DialogComponentProps>>;
-    export let forceUnmount: boolean = false;
-    export let delayUnmount: number = 0;
-    export let customState: Record<string, any> = {};
+    export let forceUnmount = false;
+    export let delayUnmount = 0;
+    export let customState: Record<string, unknown> = {};
 
-    export const showDialog = (data: any): Promise<any> =>
-        new Promise((resolve, reject) => {
-            dialogStore.setPromise(resolve, reject);
-            dialogStore.open();
-            dialogStore.setData(data);
-        });
+    // The whole open/confirm/close lifecycle lives in the framework-agnostic core store.
+    const store = createDialogStore<any, any>({ forceUnmount, delayUnmount });
 
-    let shouldRender = $dialogStore.isOpen;
-    let timer: ReturnType<typeof setTimeout> | null = null;
+    // Bridge the core store into a Svelte-readable so the template stays reactive.
+    const state = readable(store.getState(), (set) => store.subscribe((next: any) => set(next)));
 
-    $: {
-        if ($dialogStore.isOpen) {
-            shouldRender = true;
-            if (timer) {
-                clearTimeout(timer);
-                timer = null;
-            }
-        } else if (forceUnmount) {
-            if (delayUnmount > 0) {
-                if (!timer) {
-                    timer = setTimeout(() => {
-                        shouldRender = false;
-                        timer = null;
-                    }, delayUnmount);
-                }
-            } else {
-                shouldRender = false;
-            }
-        }
-    }
+    export const showDialog = (data?: unknown): Promise<unknown> => store.showDialog(data);
+    export const close = (): void => store.close();
 
-    onDestroy(() => {
-        if (timer) clearTimeout(timer);
-    });
+    onDestroy(() => store.destroy());
 </script>
 
-{#if !forceUnmount || shouldRender}
+{#if $state.shouldRender}
     <svelte:component
-            this={dialogComponent}
-            isOpen={$dialogStore.isOpen}
-            data={$dialogStore.data}
-            onClose={$dialogStore.onClose}
-            state={customState}
-            onConfirm={$dialogStore.onConfirm} />
+        this={dialogComponent}
+        isOpen={$state.isOpen}
+        data={$state.data}
+        onClose={store.close}
+        onConfirm={store.confirm}
+        state={customState} />
 {/if}

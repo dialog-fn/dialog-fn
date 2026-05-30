@@ -3,6 +3,7 @@
   "version": "4.0.0",
   "private": false,
   "description": "Dialog Flow Functions",
+  "type": "module",
   "main": "dist/main.js",
   "module": "dist/main.js",
   "files": [
@@ -16,7 +17,14 @@
   ],
   "author": "Jacob Gonzalez",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc --outDir dist"
+    "build": "tsc --outDir dist",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^2.1.8",
+    "typescript": "^5.3.3",
+    "vitest": "^2.1.8"
   }
 }

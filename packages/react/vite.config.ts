@@ -9,6 +9,7 @@ export default defineConfig({
     react(),
     dts({
       include: ["lib", "src"],
+      exclude: ["src/**/*.test.*", "examples/**"],
       rollupTypes: true,
       compilerOptions: { declaration: true },
     }),
@@ -21,7 +22,7 @@ export default defineConfig({
       fileName: "main",
     },
     rollupOptions: {
-      external: ["react", "react/jsx-runtime"],
+      external: ["react", "react-dom", "react/jsx-runtime", "@dialog-fn/core"],
     },
   },
 });
