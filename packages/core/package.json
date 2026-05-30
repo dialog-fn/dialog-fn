@@ -1,8 +1,17 @@
 {
   "name": "@dialog-fn/core",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "private": false,
-  "description": "Dialog Flow Functions",
+  "description": "Framework-agnostic promise-dialog state machine — the core behind @dialog-fn/react and @dialog-fn/svelte.",
+  "homepage": "https://dialog-fn.github.io/dialog-fn/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dialog-fn/dialog-fn",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/dialog-fn/dialog-fn/issues"
+  },
   "type": "module",
   "main": "dist/main.js",
   "module": "dist/main.js",
@@ -12,8 +21,13 @@
   "typings": "dist/main.d.ts",
   "keywords": [
     "dialog",
-    "flow",
-    "functions"
+    "modal",
+    "promise",
+    "state-machine",
+    "headless",
+    "framework-agnostic",
+    "confirm",
+    "async"
   ],
   "author": "Jacob Gonzalez",
   "scripts": {

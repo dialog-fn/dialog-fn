@@ -1,10 +1,33 @@
 {
 	"name": "@dialog-fn/svelte",
-	"version": "4.1.0",
-	"homepage": "https://github.com/dialog-fn/dialog-fn?tab=readme-ov-file#dialog-fn",
+	"version": "4.1.1",
+	"description": "Promise-based dialogs for Svelte — open a dialog and await the result. Headless, unstyled, zero dependencies, no providers.",
+	"keywords": [
+		"dialog",
+		"modal",
+		"svelte",
+		"sveltekit",
+		"confirm",
+		"confirmation",
+		"prompt",
+		"toast",
+		"drawer",
+		"promise",
+		"async",
+		"await",
+		"headless",
+		"unstyled",
+		"imperative",
+		"popup"
+	],
+	"homepage": "https://dialog-fn.github.io/dialog-fn/",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/dialog-fn/dialog-fn"
+		"url": "git+https://github.com/dialog-fn/dialog-fn",
+		"directory": "packages/svelte"
+	},
+	"bugs": {
+		"url": "https://github.com/dialog-fn/dialog-fn/issues"
 	},
 	"author": {
 		"name": "Jacob Gonzalez",

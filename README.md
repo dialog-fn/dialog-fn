@@ -2,9 +2,12 @@
 <img src="https://github.com/dialog-fn/dialog-fn/assets/36113236/2d08f4d0-09fb-4e06-8508-2076738385c3" width="300" height="300"> 
 </p>
 
-[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mui/material-ui/blob/HEAD/LICENSE)
-![NPM Version](https://img.shields.io/npm/v/%40dialog-fn%2Freact?style=flat-square&logo=react&label=%40dialog-fn%2Freact)
-![NPM Version](https://img.shields.io/npm/v/%40dialog-fn%2Fsvelte?style=flat-square&logo=svelte&label=%40dialog-fn%2Fsvelte)
+<p align="center">
+  <a href="https://dialog-fn.github.io/dialog-fn/"><img src="https://img.shields.io/badge/docs-dialog--fn.github.io-7c3aed?style=flat-square" alt="Documentation" /></a>
+  <a href="https://www.npmjs.com/package/@dialog-fn/react"><img src="https://img.shields.io/npm/v/%40dialog-fn%2Freact?style=flat-square&logo=react&label=%40dialog-fn%2Freact" alt="@dialog-fn/react on npm" /></a>
+  <a href="https://www.npmjs.com/package/@dialog-fn/svelte"><img src="https://img.shields.io/npm/v/%40dialog-fn%2Fsvelte?style=flat-square&logo=svelte&label=%40dialog-fn%2Fsvelte" alt="@dialog-fn/svelte on npm" /></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" alt="MIT license" /></a>
+</p>
 
 # dialog-fn
 
@@ -12,6 +15,8 @@
 first-class adapters for **React**, **React Native**, and **Svelte** — the same mental model
 and identical semantics everywhere. Drive any dialog component as a single promise: open it,
 `await` the result.
+
+### 📖 [Read the docs &amp; try the live playground →](https://dialog-fn.github.io/dialog-fn/)
 
 - 🧩 **Bring your own component** — fully unstyled and render-agnostic, no design lock-in
 - 🪶 **~1 KB, zero runtime dependencies** — built on native primitives (React's

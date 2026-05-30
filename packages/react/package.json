@@ -1,6 +1,26 @@
 {
   "name": "@dialog-fn/react",
-  "version": "5.0.0",
+  "version": "5.0.1",
+  "description": "Promise-based dialogs for React — open a dialog and await the result. Headless, unstyled, ~1 KB, zero dependencies, no providers.",
+  "keywords": [
+    "dialog",
+    "modal",
+    "react",
+    "react-dialog",
+    "react-modal",
+    "confirm",
+    "confirmation",
+    "prompt",
+    "toast",
+    "drawer",
+    "promise",
+    "async",
+    "await",
+    "headless",
+    "unstyled",
+    "imperative",
+    "popup"
+  ],
   "type": "module",
   "main": "dist/main.js",
   "module": "dist/main.js",
@@ -12,10 +32,14 @@
     }
   },
   "sideEffects": false,
-  "homepage": "https://github.com/dialog-fn/dialog-fn?tab=readme-ov-file#dialog-fn",
+  "homepage": "https://dialog-fn.github.io/dialog-fn/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dialog-fn/dialog-fn"
+    "url": "git+https://github.com/dialog-fn/dialog-fn",
+    "directory": "packages/react"
+  },
+  "bugs": {
+    "url": "https://github.com/dialog-fn/dialog-fn/issues"
   },
   "author": {
     "name": "Jacob Gonzalez",
