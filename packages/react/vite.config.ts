@@ -22,8 +22,8 @@ export default defineConfig({
       fileName: "main",
     },
     rollupOptions: {
-      // @dialog-fn/core is intentionally NOT external — it is bundled in so the
-      // published package is self-contained (core is not published separately).
+      // core is inlined into src/core.ts (see scripts/gen-core.mjs), so the published
+      // package is self-contained — both runtime and types — with nothing to externalize.
       external: ["react", "react-dom", "react/jsx-runtime"],
     },
   },

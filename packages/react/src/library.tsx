@@ -3,9 +3,9 @@ import {
   createDialogStore,
   type DialogComponentProps,
   type DialogOptions,
-} from "@dialog-fn/core";
+} from "./core";
 
-export type { DialogComponentProps } from "@dialog-fn/core";
+export type { DialogComponentProps } from "./core";
 
 /**
  * Imperative trigger returned by {@link createDialog}. Open the dialog and await

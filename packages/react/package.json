@@ -1,6 +1,6 @@
 {
   "name": "@dialog-fn/react",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "Promise-based dialogs for React — open a dialog and await the result. Headless, unstyled, ~1 KB, zero dependencies, no providers.",
   "keywords": [
     "dialog",
@@ -50,8 +50,10 @@
     "dist"
   ],
   "scripts": {
+    "gen:core": "node scripts/gen-core.mjs",
+    "prepare": "node scripts/gen-core.mjs",
     "dev": "vite",
-    "build": "tsc --p ./tsconfig-build.json && vite build",
+    "build": "pnpm run gen:core && tsc --p ./tsconfig-build.json && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "vitest run",
